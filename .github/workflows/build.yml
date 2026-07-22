@@ -151,29 +151,34 @@ jobs:
       - name: Create bootable ISO
         run: |
           echo "=== Step 7b: ISO Creation ==="
+
+          # === ISOLINUX for BIOS boot (legacy) ===
+          sudo mkdir -p build/iso/isolinux
+          sudo cp /usr/lib/ISOLINUX/isolinux.bin build/iso/isolinux/
+          sudo cp /usr/lib/syslinux/modules/bios/vesamenu.c32 build/iso/isolinux/
+          sudo cp /usr/lib/syslinux/modules/bios/reboot.c32 build/iso/isolinux/
+          sudo cp /usr/lib/syslinux/modules/bios/poweroff.c32 build/iso/isolinux/
+          sudo cp /usr/lib/syslinux/modules/bios/libcom32.c32 build/iso/isolinux/
+          sudo cp /usr/lib/syslinux/modules/bios/libutil.c32 build/iso/isolinux/
+          sudo cp scripts/chroot/isolinux.cfg build/iso/isolinux/isolinux.cfg
+          sudo cp build/resources/salamos-grub.png build/iso/isolinux/background.png
+
+          # === GRUB EFI for UEFI boot (modern) ===
           sudo mkdir -p build/iso/boot/grub
           sudo mkdir -p build/iso/EFI/BOOT
-
           sudo cp scripts/chroot/grub.cfg build/iso/boot/grub/grub.cfg
           sudo cp build/resources/salamos-grub.png build/iso/boot/grub/
 
           sudo grub-mkimage -O x86_64-efi \
             -o build/iso/EFI/BOOT/BOOTX64.EFI \
             -p "/boot/grub" \
-            all_video boot btrfs cat chain configfile echo efifwsetup \
+            all_video boot btrfs cat chain configfile echo \
             efi_gop efi_uga fat font gfxmenu gfxterm gzio hfsplus \
-            iso9660 linux loadenv loopback ls lsefi normal part_apple \
+            iso9660 linux loadenv loopback ls lsefi normal \
             part_msdos part_gpt png read reboot search search_fs_uuid \
             search_fs_file search_label squash4 test true video video_fb xfs
 
-          sudo mkdir -p build/iso/boot/grub/i386-pc
-          sudo grub-mkimage -O i386-pc \
-            -o build/iso/boot/grub/i386-pc/eltorito.img \
-            -p "/boot/grub" \
-            biosdisk chain configfile echo ext2 fat font gfxterm \
-            iso9660 linux ls normal part_msdos part_gpt \
-            png reboot search search_fs_uuid squash4 test true video video_fb
-
+          # === Create hybrid ISO: ISOLINUX(BIOS) + GRUB(UEFI) ===
           MOD_DATE=$(date +%Y%m%d%H%M%S00)
           sudo xorriso -as mkisofs \
             -iso-level 3 \
@@ -183,11 +188,11 @@ jobs:
             -A "SalamOS Live System" \
             --modification-date="${MOD_DATE}" \
             -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
-            -eltorito-boot boot/grub/i386-pc/eltorito.img \
+            -eltorito-boot isolinux/isolinux.bin \
             -no-emul-boot \
             -boot-load-size 4 \
             -boot-info-table \
-            --eltorito-catalog boot/grub/boot.cat \
+            --eltorito-catalog isolinux/boot.cat \
             -eltorito-alt-boot \
             -e EFI/BOOT/BOOTX64.EFI \
             -no-emul-boot \
