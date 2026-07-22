@@ -103,11 +103,13 @@ Categories=System;TerminalEmulator;
 StartupNotify=true
 TEOF
 
-# Make Software Center executable
-chmod +x /usr/local/bin/salamos-software-center
+# Make Software Center executable (may already exist from overlay, or may not)
+if [ -f /usr/local/bin/salamos-software-center ]; then
+  chmod +x /usr/local/bin/salamos-software-center
+fi
 
 # Make desktop shortcuts trusted (show icons on desktop)
-chmod +x /home/salamos/Desktop/*.desktop
+chmod +x /home/salamos/Desktop/*.desktop 2>/dev/null || true
 
 # === Set ownership for user files ===
 chown -R salamos:salamos /home/salamos/.config

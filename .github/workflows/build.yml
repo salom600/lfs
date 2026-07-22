@@ -38,7 +38,7 @@ jobs:
             debootstrap squashfs-tools xorriso isolinux syslinux-common \
             grub-pc-bin grub-efi-amd64-bin grub-efi-amd64-signed shim-signed \
             mtools dosfstools e2fsprogs parted gdisk fdisk \
-            python3-pil systemd-container fakeroot
+            python3-pil systemd-container fakeroot rsync
 
       - name: Generate SalamOS assets
         run: |
@@ -92,9 +92,10 @@ jobs:
       - name: Apply SalamOS customizations
         run: |
           echo "=== Step 4: Customization ==="
-          sudo cp -a overlays/etc/ build/chroot/etc/ 2>/dev/null || true
-          sudo cp -a overlays/usr/ build/chroot/usr/ 2>/dev/null || true
-          sudo cp -a overlays/home/ build/chroot/home/ 2>/dev/null || true
+          # Use rsync to properly merge overlays into chroot (cp -a creates nested usr/usr/)
+          sudo rsync -a overlays/etc/ build/chroot/etc/
+          sudo rsync -a overlays/usr/ build/chroot/usr/
+          sudo rsync -a overlays/home/ build/chroot/home/ 2>/dev/null || true
 
           sudo mkdir -p build/chroot/usr/share/backgrounds/salamos
           sudo mkdir -p build/chroot/usr/share/pixmaps
