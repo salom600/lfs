@@ -1,0 +1,58 @@
+#!/bin/bash
+# SalamOS Software Center - Install apps with one click
+# ============================================
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+declare -A APPS=(
+  ["Firefox Browser"]="firefox-esr"
+  ["Chromium Browser"]="chromium"
+  ["Thunderbird Email"]="thunderbird"
+  ["Transmission Torrent"]="transmission-gtk"
+  ["LibreOffice Full"]="libreoffice"
+  ["LibreOffice Writer"]="libreoffice-writer"
+  ["LibreOffice Calc"]="libreoffice-calc"
+  ["VLC Media Player"]="vlc"
+  ["mpv Player (Light)"]="mpv"
+  ["GIMP Image Editor"]="gimp"
+  ["Inkscape Vector"]="inkscape"
+  ["VS Code"]="code"
+  ["Geany IDE"]="geany"
+  ["Telegram"]="telegram-desktop"
+  ["Discord"]="discord"
+  ["BleachBit (Cleaner)"]="bleachbit"
+  ["Timeshift (Backup)"]="timeshift"
+)
+
+case "${1:-}" in
+  install)
+    echo "Installing $2..."
+    sudo apt-get install -y "$2" ;;
+  remove)
+    echo "Removing $2..."
+    sudo apt-get remove --purge -y "$2"
+    sudo apt-get autoremove -y --purge ;;
+  search)
+    apt-cache search "$2" | head -20 ;;
+  list)
+    echo "=== SalamOS Software Center ==="
+    for app in "${!APPS[@]}"; do
+      printf "%-30s %s\n" "$app" "${APPS[$app]}"
+    done | sort ;;
+  gui)
+    if command -v rofi &>/dev/null; then
+      choice=$(for app in "${!APPS[@]}"; do echo "$app → ${APPS[$app]}"; done | sort | \
+        rofi -dmenu -p "SalamOS Software Center" -i -width 600 -lines 15)
+      if [ -n "$choice" ]; then
+        pkg=$(echo "$choice" | sed 's/.*→ //' | tr -d ' ')
+        lxterminal -e bash -c "sudo apt-get install -y $pkg; echo 'Done! Press Enter.'; read"
+      fi
+    else
+      echo "=== SalamOS Software Center ==="
+      for app in "${!APPS[@]}"; do printf "%-30s %s\n" "$app" "${APPS[$app]}"; done | sort
+      read -p "Enter package to install: " pkg
+      sudo apt-get install -y "$pkg"
+    fi ;;
+  *)
+    echo "SalamOS Software Center"
+    echo "Commands: install|remove|search|list|gui <package>" ;;
+esac

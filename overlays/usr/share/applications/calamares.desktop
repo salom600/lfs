@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Install SalamOS
+Comment=Install SalamOS to your hard drive
+Exec=calamares
+Icon=system-software-install
+Categories=System;
+StartupNotify=true
+NoDisplay=false

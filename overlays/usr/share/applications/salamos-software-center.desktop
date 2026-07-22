@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Software Center
+Comment=Install and manage applications easily
+Exec=salamos-software-center gui
+Icon=system-software-install
+Categories=System;PackageManager;
+StartupNotify=true
