@@ -155,6 +155,7 @@ jobs:
           # === ISOLINUX for BIOS boot (legacy) ===
           sudo mkdir -p build/iso/isolinux
           sudo cp /usr/lib/ISOLINUX/isolinux.bin build/iso/isolinux/
+          sudo cp /usr/lib/syslinux/modules/bios/ldlinux.c32 build/iso/isolinux/
           sudo cp /usr/lib/syslinux/modules/bios/vesamenu.c32 build/iso/isolinux/
           sudo cp /usr/lib/syslinux/modules/bios/reboot.c32 build/iso/isolinux/
           sudo cp /usr/lib/syslinux/modules/bios/poweroff.c32 build/iso/isolinux/
