@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=XSession
+Name=SalamOS Openbox
+Comment=SalamOS Ultra-lightweight Desktop (Openbox + tint2)
+Exec=/etc/lightdm/Xsession
+TryExec=openbox-session
+Icon=openbox
+DesktopNames=openbox

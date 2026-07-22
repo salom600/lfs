@@ -10,8 +10,9 @@ apt-get update
 # Set root password
 echo "root:root" | chpasswd
 
-# Create default user
-useradd -m -s /bin/bash -G sudo,adm,disk salamos
+# Create default user (with autologin group for LightDM)
+groupadd -r autologin 2>/dev/null || true
+useradd -m -s /bin/bash -G sudo,adm,disk,autologin salamos
 echo "salamos:salamos" | chpasswd
 
 # Configure locale (English + Arabic)

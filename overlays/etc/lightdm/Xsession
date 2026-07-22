@@ -1,21 +1,46 @@
-# SalamOS Default Xsession
-# Sets up the environment for Openbox
+#!/bin/bash
+# SalamOS Xsession wrapper - starts Openbox desktop environment
 # ============================================
 
-#!/bin/bash
-
 # Set GTK theme
-export GTK_THEME=SalamOS-Dark
+export GTK_THEME=SalamOS-Dark:dark
 
-# Set icon theme
+# Set desktop environment identifier
 export XDG_CURRENT_DESKTOP=openbox
+export DESKTOP_SESSION=openbox
 
 # Set cursor theme
 export XCURSOR_THEME=Adwaita
 export XCURSOR_SIZE=24
 
-# Set keyboard layout
-setxkbmap -layout "us,ara" -option "grp:alt_shift_toggle"
+# Set keyboard layout (Arabic + English toggle)
+if command -v setxkbmap &>/dev/null; then
+    setxkbmap -layout "us,ara" -option "grp:alt_shift_toggle" 2>/dev/null || true
+fi
 
-# Start Openbox session
+# Start tint2 panel in background
+tint2 &
+
+# Start notification daemon
+dunst &
+
+# Start volume icon
+volumeicon-alsa & 2>/dev/null || true
+
+# Start picom compositor (shadows + fading)
+if command -v picom &>/dev/null; then
+    picom --config /etc/picom.conf -b 2>/dev/null || true
+fi
+
+# Start conky system monitor
+if command -v conky &>/dev/null; then
+    conky -c /etc/conky/conky.conf & 2>/dev/null || true
+fi
+
+# Set wallpaper with nitrogen
+if command -v nitrogen &>/dev/null; then
+    nitrogen --restore 2>/dev/null || true
+fi
+
+# Start Openbox session (this must be last - it replaces this shell)
 exec openbox-session
