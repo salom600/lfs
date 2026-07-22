@@ -167,7 +167,7 @@ jobs:
           sudo grub-mkimage -O i386-pc \
             -o build/iso/boot/grub/i386-pc/eltorito.img \
             -p "/boot/grub" \
-            biosdisk cdboot chain configfile echo ext2 font gfxmenu gfxterm \
+            biosdisk chain configfile echo ext2 fat font gfxterm \
             iso9660 linux ls normal part_msdos part_gpt \
             png reboot search search_fs_uuid squash4 test true video video_fb
 
