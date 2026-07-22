@@ -368,7 +368,7 @@ jobs:
           # Copy and execute chroot-setup script
           sudo cp build/scripts/chroot-setup.sh build/chroot/tmp/chroot-setup.sh
           sudo chroot build/chroot /bin/bash /tmp/chroot-setup.sh
-          sudo rm build/chroot/tmp/chroot-setup.sh
+          sudo rm -f build/chroot/tmp/chroot-setup.sh 2>/dev/null || true
           echo "Chroot setup completed"
 
       - name: Install packages
@@ -376,7 +376,7 @@ jobs:
           echo "=== Step 3: Package Installation ==="
           sudo cp build/scripts/install-packages.sh build/chroot/tmp/install-packages.sh
           sudo chroot build/chroot /bin/bash /tmp/install-packages.sh
-          sudo rm build/chroot/tmp/install-packages.sh
+          sudo rm -f build/chroot/tmp/install-packages.sh 2>/dev/null || true
           echo "Packages installed. Size: $(sudo du -sh build/chroot | cut -f1)"
 
       - name: Apply SalamOS customizations
@@ -393,7 +393,7 @@ jobs:
 
           sudo cp build/scripts/customize.sh build/chroot/tmp/customize.sh
           sudo chroot build/chroot /bin/bash /tmp/customize.sh
-          sudo rm build/chroot/tmp/customize.sh
+          sudo rm -f build/chroot/tmp/customize.sh 2>/dev/null || true
           echo "Customization completed"
 
       - name: Configure desktop environment
@@ -401,14 +401,14 @@ jobs:
           echo "=== Step 5: Desktop Setup ==="
           sudo cp build/scripts/desktop-setup.sh build/chroot/tmp/desktop-setup.sh
           sudo chroot build/chroot /bin/bash /tmp/desktop-setup.sh
-          sudo rm build/chroot/tmp/desktop-setup.sh
+          sudo rm -f build/chroot/tmp/desktop-setup.sh 2>/dev/null || true
 
       - name: Cleanup and optimize
         run: |
           echo "=== Step 6: Cleanup ==="
           sudo cp build/scripts/cleanup.sh build/chroot/tmp/cleanup.sh
           sudo chroot build/chroot /bin/bash /tmp/cleanup.sh
-          sudo rm build/chroot/tmp/cleanup.sh
+          sudo rm -f build/chroot/tmp/cleanup.sh 2>/dev/null || true
           echo "Cleanup completed. Size: $(sudo du -sh build/chroot | cut -f1)"
 
       - name: Create squashfs
