@@ -38,7 +38,7 @@ jobs:
             debootstrap squashfs-tools xorriso isolinux syslinux-common \
             grub-pc-bin grub-efi-amd64-bin grub-efi-amd64-signed shim-signed \
             mtools dosfstools e2fsprogs parted gdisk fdisk \
-            python3-pil systemd-container fakeroot rsync
+            python3-pil systemd-container fakeroot rsync lz4
 
       - name: Generate SalamOS assets
         run: |
@@ -122,12 +122,22 @@ jobs:
           sudo rm -f build/chroot/tmp/cleanup.sh 2>/dev/null || true
           echo "Cleanup completed. Size: $(sudo du -sh build/chroot | cut -f1)"
 
+      - name: Unmount chroot filesystems
+        run: |
+          echo "=== Unmounting virtual filesystems from chroot ==="
+          sudo umount build/chroot/proc 2>/dev/null || true
+          sudo umount build/chroot/sys 2>/dev/null || true
+          sudo umount build/chroot/dev/pts 2>/dev/null || true
+          sudo umount build/chroot/dev 2>/dev/null || true
+          sudo umount build/chroot/run 2>/dev/null || true
+          echo "Virtual filesystems unmounted. Chroot is clean for squashfs."
+
       - name: Create squashfs
         run: |
           echo "=== Step 7a: Squashfs ==="
           sudo mkdir -p build/iso/live
           sudo mksquashfs build/chroot build/iso/live/filesystem.squashfs \
-            -comp gzip \
+            -comp lz4 \
             -no-progress \
             -processors $(nproc) \
             -e boot/grub
