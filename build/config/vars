@@ -1,0 +1,47 @@
+# SalamOS Build Configuration
+# ============================================
+
+# Distribution Identity
+DISTRO_NAME="SalamOS"
+DISTRO_CODENAME="zen"
+DISTRO_VERSION="2026.1"
+DISTRO_URL="https://github.com/salom600/lfs"
+DISTRO_DESC="Ultra-lightweight professional Linux distribution"
+
+# Base System
+BASE_DISTRO="debian"
+BASE_SUITE="bookworm"
+BASE_MIRROR="http://deb.debian.org/debian"
+BASE_ARCH="amd64"
+
+# Kernel
+KERNEL_VERSION="6.1.0-17-amd64"
+KERNEL_FLAVOR="amd64"
+
+# Desktop Environment
+DE_TYPE="openbox"        # Ultra-lightweight window manager
+DE_PANEL="tint2"         # Lightweight panel
+DE_MENU="jgmenu"         # Lightweight application menu
+DE_DM="lightdm"          # Lightweight display manager
+DE_GREETER="lightdm-gtk-greeter"
+
+# User Settings
+DEFAULT_USER="salamos"
+DEFAULT_PASSWORD="salamos"
+ROOT_PASSWORD="root"
+
+# ISO Settings
+ISO_VOLUME_ID="SalamOS 2026.1"
+ISO_publisher="SalamOS Project"
+ISO_APPLICATION="SalamOS Live System"
+
+# Build Paths (relative to build root)
+CHROOT_DIR="chroot"
+ISO_DIR="iso"
+LIVE_DIR="live"
+SQUASHFS_NAME="filesystem.squashfs"
+ISO_NAME="SalamOS-2026.1-amd64.iso"
+
+# Performance Targets
+MAX_ISO_SIZE_MB=500
+TARGET_IDLE_RAM_MB=150

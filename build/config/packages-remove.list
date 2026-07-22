@@ -1,0 +1,89 @@
+# SalamOS - Packages to REMOVE from base system
+# These are removed to achieve maximum lightweight
+# ============================================
+
+# === Heavy Desktop Environments (never installed, but ensure removal) ===
+gnome-shell
+gnome-desktop3-data
+kde-plasma-desktop
+xfce4
+xfce4-goodies
+mate-desktop-environment
+cinnamon-desktop-environment
+lxde
+
+# === Office Suite ===
+libreoffice-*
+gnumeric
+abiword
+
+# === Games ===
+game-*
+steam-*
+
+# === Printing ===
+cups
+cups-bsd
+printer-driver-*
+
+# === Bluetooth ===
+bluetooth
+bluez
+
+# === Accessibility (heavy) ===
+orca
+brltty
+
+# === Snap/Flatpak infrastructure ===
+snapd
+flatpak
+
+# === Language packs (keep only needed) ===
+firefox-esr-l10n-*
+firefox-l10n-*
+# We'll reinstall only Arabic and English later
+
+# === Documentation (heavy) ===
+man-db
+info
+
+# === Development tools (not needed for end users) ===
+gcc-*
+g++-*
+make
+autoconf
+automake
+libtool
+dpkg-dev
+build-essential
+
+# === Unused network services ===
+apache2
+nginx
+mysql-*
+postgresql-*
+exim4
+postfix
+bind9
+nfs-common
+samba
+
+# === Unused sound services ===
+esound-common
+
+# === Unused X components ===
+xserver-xorg-video-intel
+# Keep vesa, modesetting, amd, nouveau for broad compatibility
+
+# === Unused fonts ===
+fonts-noto-cjk-extra
+fonts-noto-extra
+
+# === Misc bloat ===
+popularity-contest
+installation-report
+reportbug
+apt-listchanges
+debconf-i18n
+tasksel
+task-*

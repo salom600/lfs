@@ -1,0 +1,161 @@
+# SalamOS - Core Essential Packages
+# Minimal packages required for a functional system
+# ============================================
+
+# === Base System ===
+base-files
+base-passwd
+dpkg
+apt
+debconf
+libc6
+bash
+coreutils
+util-linux
+mount
+init-system-helpers
+systemd
+systemd-sysv
+dbus
+passwd
+adduser
+sudo
+locales
+console-setup
+keyboard-configuration
+tzdata
+hostname
+ifupdown
+iproute2
+net-tools
+procps
+psmisc
+logrotate
+cron
+anacron
+
+# === Boot & Kernel ===
+linux-image-6.1.0-17-amd64
+linux-headers-6.1.0-17-amd64
+grub2
+grub-pc
+initramfs-tools
+os-prober
+firmware-linux-free
+firmware-misc-nonfree
+
+# === X Window System (minimal) ===
+xserver-xorg-core
+xserver-xorg-video-all
+xserver-xorg-input-all
+xorg
+xinit
+x11-utils
+x11-xserver-utils
+xrdb
+setxkbmap
+
+# === Desktop Environment ===
+openbox
+obconf
+tint2
+jgmenu
+lightdm
+lightdm-gtk-greeter
+pcmanfm
+lxterminal
+mousepad
+feh
+nitrogen
+picom
+conky
+rofi
+
+# === Networking ===
+network-manager
+network-manager-gnome
+wpasupplicant
+dhcpd
+curl
+wget
+ca-certificates
+openssh-client
+rsync
+
+# === Audio (minimal) ===
+alsa-utils
+pulseaudio
+pulseaudio-utils
+pavucontrol-qt
+
+# === File Management & Archives ===
+file-roller
+p7zip-full
+unzip
+gzip
+bzip2
+xz-utils
+tar
+
+# === Text & Documents (minimal) ===
+firefox-esr
+evince
+qpdfview
+
+# === System Utilities ===
+htop
+nano
+vim-tiny
+less
+grep
+gawk
+findutils
+sed
+usbutils
+pciutils
+lshw
+lm-sensors
+acpi
+acpid
+cpufrequtils
+smartmontools
+gparted
+gdisk
+fdisk
+ntfs-3g
+dosfstools
+mtools
+
+# === Appearance ===
+gtk2-engines
+gtk3-engines-breeze
+adwaita-icon-theme
+papirus-icon-theme
+fonts-liberation
+fonts-noto
+fonts-dejavu
+fonts-hack
+
+# === Security ===
+apparmor
+apparmor-utils
+ufw
+cryptsetup
+polkitd
+
+# === Power Management ===
+upower
+acpi-support
+tlp
+
+# === Misc Essential ===
+xdg-utils
+desktop-file-utils
+shared-mime-info
+gvfs
+gvfs-backends
+udisks2
+udisks2-btrfs
+udisks2-lvm2
+polkitd
+consolekit

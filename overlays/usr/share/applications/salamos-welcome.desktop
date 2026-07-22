@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=SalamOS Welcome
+Comment=Welcome screen for new SalamOS users
+Exec=lxterminal -e bash -c "cat /etc/motd; echo; echo 'Press Enter to continue...'; read"
+Terminal=false
+Categories=System;
+Icon=salamos-logo
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

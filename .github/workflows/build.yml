@@ -1,0 +1,626 @@
+name: Build SalamOS ISO
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type (full or quick)'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - quick
+
+env:
+  DISTRO_NAME: "SalamOS"
+  DISTRO_VERSION: "2026.1"
+  BASE_SUITE: "bookworm"
+  BASE_ARCH: "amd64"
+  BASE_MIRROR: "http://deb.debian.org/debian"
+  DEFAULT_USER: "salamos"
+  ISO_NAME: "SalamOS-2026.1-amd64.iso"
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Free up disk space
+        run: |
+          # Remove unnecessary software to free up disk space
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache
+          sudo apt-get remove -y azure-cli google-chrome-stable firefox
+          sudo apt-get autoremove -y --purge
+          sudo apt-get clean
+          df -h
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            debootstrap \
+            squashfs-tools \
+            xorriso \
+            isolinux \
+            syslinux-common \
+            grub-pc-bin \
+            grub-efi-amd64-bin \
+            grub-efi-amd64-signed \
+            shim-signed \
+            mtools \
+            dosfstools \
+            e2fsprogs \
+            parted \
+            gdisk \
+            fdisk \
+            python3-pil \
+            qemu-utils \
+            systemd-container \
+            fakeroot \
+            xorriso
+
+      - name: Verify build environment
+        run: |
+          echo "=== Build Environment ==="
+          echo "Runner: $(uname -a)"
+          echo "Disk space: $(df -h / | tail -1)"
+          echo "Memory: $(free -h | head -2)"
+          echo "CPU: $(nproc)"
+          echo "=== Dependencies ==="
+          debootstrap --version || echo "debootstrap: checking..."
+          which mksquashfs xorriso grub-mkimage || true
+
+      - name: Generate SalamOS assets
+        run: |
+          python3 /home/z/my-project/scripts/generate-salamos-assets.py || python3 scripts/generate-assets.py || true
+          # Also generate directly from repo
+          mkdir -p build/resources
+          python3 -c "
+          from PIL import Image, ImageDraw, ImageFont
+          import os
+          
+          BG = (26, 26, 46)
+          ACCENT = (233, 69, 96)
+          TEXT = (224, 224, 224)
+          HEADER = (15, 52, 96)
+          
+          # Wallpaper
+          img = Image.new('RGB', (1920, 1080), BG)
+          d = ImageDraw.Draw(img)
+          for y in range(1080):
+              ratio = y / 1080
+              d.line([(0,y),(1920,y)], fill=(int(BG[0]*(1-ratio*0.05)), int(BG[1]*(1-ratio*0.05)), int(BG[2]*(1-ratio*0.15))))
+          
+          d.ellipse([920-80, 480-80, 920+80, 480+80], outline=ACCENT, width=3)
+          d.arc([920-56, 480-56, 920+56, 480], 180, 360, fill=ACCENT, width=4)
+          d.arc([920-56, 480, 920+56, 480+56], 0, 180, fill=ACCENT, width=4)
+          d.line([(864,480),(976,480)], fill=TEXT, width=2)
+          
+          try:
+              fl = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 48)
+              fm = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 20)
+              fs = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 14)
+          except:
+              fl = ImageFont.load_default()
+              fm = ImageFont.load_default()
+              fs = ImageFont.load_default()
+          
+          d.text((860, 530), 'SalamOS', fill=TEXT, font=fl)
+          d.text((800, 590), 'Ultra-lightweight Professional Linux', fill=HEADER, font=fm)
+          d.text((870, 620), '2026.1 Zen', fill=ACCENT, font=fs)
+          img.save('build/resources/salamos-wallpaper.png')
+          
+          # Logo
+          img2 = Image.new('RGBA', (256,256), (0,0,0,0))
+          d2 = ImageDraw.Draw(img2)
+          d2.ellipse([128-60,128-60,128+60,128+60], outline=ACCENT, width=3)
+          img2.save('build/resources/salamos-logo.png')
+          
+          # GRUB bg
+          img3 = Image.new('RGB', (640,480), BG)
+          d3 = ImageDraw.Draw(img3)
+          d3.text((250,240), 'SalamOS', fill=TEXT, font=fl if 'fl' in dir() else ImageFont.load_default())
+          img3.save('build/resources/salamos-grub.png')
+          
+          print('Assets generated successfully')
+          "
+
+      - name: Create base Debian system (debootstrap)
+        run: |
+          echo "=== Step 1: Debootstrap ==="
+          sudo mkdir -p build/chroot
+          sudo debootstrap \
+            --variant=minbase \
+            --arch=${{ env.BASE_ARCH }} \
+            --include=systemd,dbus,apt,bash,coreutils,dpkg,passwd,adduser,sudo,locales \
+            ${{ env.BASE_SUITE }} \
+            build/chroot \
+            ${{ env.BASE_MIRROR }}
+          echo "Debootstrap completed. Size: $(sudo du -sh build/chroot | cut -f1)"
+
+      - name: Setup chroot environment
+        run: |
+          echo "=== Step 2: Chroot Setup ==="
+          
+          # Mount filesystems for chroot
+          sudo mount --bind /dev build/chroot/dev
+          sudo mount --bind /dev/pts build/chroot/dev/pts
+          sudo mount --bind /proc build/chroot/proc
+          sudo mount --bind /sys build/chroot/sys
+          sudo mount --bind /run build/chroot/run
+          
+          # Configure apt sources
+          sudo tee build/chroot/etc/apt/sources.list > /dev/null << 'EOF'
+          deb http://deb.debian.org/debian bookworm main contrib non-free-firmware
+          deb http://deb.debian.org/debian bookworm-updates main contrib non-free-firmware
+          deb http://deb.debian.org/debian-security bookworm-security main contrib non-free-firmware
+          EOF
+          
+          # Copy resolv.conf
+          sudo cp /etc/resolv.conf build/chroot/etc/resolv.conf
+          
+          # Set hostname
+          sudo echo "SalamOS" | sudo tee build/chroot/etc/hostname
+          
+          # Set hosts
+          sudo tee build/chroot/etc/hosts > /dev/null << 'EOF'
+          127.0.0.1       localhost
+          127.0.1.1       SalamOS
+          ::1     localhost ip6-localhost ip6-loopback
+          EOF
+          
+          # Create default user and configure in chroot
+          sudo chroot build/chroot /bin/bash << 'CHEOF'
+          # Update apt
+          apt-get update
+          
+          # Set root password
+          echo "root:root" | chpasswd
+          
+          # Create default user
+          useradd -m -s /bin/bash -G sudo,adm,disk salamos
+          echo "salamos:salamos" | chpasswd
+          
+          # Configure locale
+          sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+          sed -i 's/# ar_SA.UTF-8 UTF-8/ar_SA.UTF-8 UTF-8/' /etc/locale.gen
+          locale-gen
+          echo 'LANG=en_US.UTF-8' > /etc/default/locale
+          
+          # Configure timezone
+          echo 'Africa/Lagos' > /etc/timezone
+          ln -sf /usr/share/zoneinfo/Africa/Lagos /etc/localtime
+          
+          # Configure keyboard
+          cat > /etc/default/keyboard << 'KEOF'
+          XKBMODEL="pc105"
+          XKBLAYOUT="us,ara"
+          XKBOPTIONS="grp:alt_shift_toggle"
+          KEOF
+          
+          # Sudo config
+          echo "salamos ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/salamos
+          chmod 440 /etc/sudoers.d/salamos
+          CHEOF
+
+      - name: Install packages
+        run: |
+          echo "=== Step 3: Package Installation ==="
+          
+          # Configure apt to skip recommends
+          sudo tee build/chroot/etc/apt/apt.conf.d/99-no-recommends > /dev/null << 'EOF'
+          APT::Install-Recommends "false";
+          APT::Install-Suggests "false";
+          APT::AutoRemove::RecommendsImportant "false";
+          APT::AutoRemove::SuggestsImportant "false";
+          EOF
+          
+          # Install essential packages
+          sudo chroot build/chroot /bin/bash << 'CHEOF'
+          apt-get update
+          
+          # Core system
+          apt-get install -y --no-install-recommends \
+            linux-image-6.1.0-17-amd64 \
+            linux-headers-6.1.0-17-amd64 \
+            initramfs-tools \
+            grub2 grub-pc \
+            firmware-linux-free firmware-misc-nonfree \
+            systemd dbus \
+            network-manager network-manager-gnome \
+            wpasupplicant \
+            alsa-utils pulseaudio pulseaudio-utils pavucontrol-qt \
+            curl wget ca-certificates \
+            openssh-client \
+            sudo policykitd ufw \
+            xserver-xorg-core xserver-xorg-video-all xserver-xorg-input-all \
+            xorg xinit \
+            openbox obconf \
+            tint2 jgmenu \
+            lightdm lightdm-gtk-greeter \
+            pcmanfm lxterminal mousepad \
+            feh nitrogen picom conky rofi \
+            gtk2-engines gtk3-engines-breeze \
+            papirus-icon-theme adwaita-icon-theme \
+            fonts-liberation fonts-noto fonts-dejavu fonts-hack \
+            htop nano vim-tiny \
+            file-roller p7zip-full unzip \
+            firefox-esr \
+            gparted ntfs-3g dosfstools \
+            usbutils pciutils lshw \
+            acpi acpid upower tlp \
+            xdg-utils desktop-file-utils \
+            gvfs gvfs-backends udisks2 \
+            evince \
+            scrot
+          
+          # Firefox language packs (Arabic + English only)
+          apt-get install -y --no-install-recommends firefox-esr-l10n-ar || true
+          
+          # Autoremove
+          apt-get autoremove -y --purge
+          apt-get clean
+          rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+          
+          # Update initramfs
+          update-initramfs -u -k all
+          CHEOF
+          
+          echo "Packages installed. Size: $(sudo du -sh build/chroot | cut -f1)"
+
+      - name: Apply SalamOS customizations
+        run: |
+          echo "=== Step 4: Customization ==="
+          
+          # Copy overlay files into chroot
+          sudo cp -a overlays/etc/ build/chroot/etc/ 2>/dev/null || true
+          sudo cp -a overlays/usr/ build/chroot/usr/ 2>/dev/null || true
+          sudo cp -a overlays/home/ build/chroot/home/ 2>/dev/null || true
+          
+          # Copy wallpaper resources
+          sudo mkdir -p build/chroot/usr/share/backgrounds/salamos
+          sudo mkdir -p build/chroot/usr/share/pixmaps
+          sudo cp build/resources/salamos-wallpaper.png build/chroot/usr/share/backgrounds/salamos/
+          sudo cp build/resources/salamos-logo.png build/chroot/usr/share/pixmaps/
+          
+          # Apply customizations in chroot
+          sudo chroot build/chroot /bin/bash << 'CHEOF'
+          # Distribution identity
+          cat > /etc/os-release << 'OEOF'
+          NAME="SalamOS"
+          VERSION="2026.1 (Zen)"
+          ID=salamos
+          ID_LIKE=debian
+          PRETTY_NAME="SalamOS 2026.1"
+          VERSION_ID="2026.1"
+          HOME_URL="https://github.com/salom600/lfs"
+          SUPPORT_URL="https://github.com/salom600/lfs"
+          BUG_REPORT_URL="https://github.com/salom600/lfs/issues"
+          VERSION_CODENAME=zen
+          DEBIAN_CODENAME=bookworm
+          OEOF
+          
+          echo "SalamOS 2026.1 \n \l" > /etc/issue
+          echo "SalamOS 2026.1" > /etc/issue.net
+          
+          # MOTD
+          cat > /etc/motd << 'MEOF'
+          Welcome to SalamOS 2026.1 (Zen)
+          Ultra-lightweight professional Linux distribution
+          
+          Quick commands:
+            update  - Update system
+            install - Install packages
+            clean   - Clean system
+          MEOF
+          
+          # User bashrc
+          cat > /home/salamos/.bashrc << 'BEOF'
+          export PS1='\u@\h:\w\$ '
+          export EDITOR=nano
+          export BROWSER=firefox-esr
+          alias ll='ls -la'
+          alias update='sudo apt-get update && sudo apt-get upgrade'
+          alias install='sudo apt-get install'
+          alias remove='sudo apt-get remove --purge'
+          alias search='apt-cache search'
+          alias clean='sudo apt-get autoremove --purge && sudo apt-get clean'
+          BEOF
+          chown salamos:salamos /home/salamos/.bashrc
+          
+          # GRUB config
+          cat > /etc/default/grub << 'GEOF'
+          GRUB_DEFAULT=0
+          GRUB_TIMEOUT=5
+          GRUB_DISTRIBUTOR="SalamOS"
+          GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+          GRUB_CMDLINE_LINUX=""
+          GEOF
+          
+          # Mask unnecessary services
+          systemctl mask apt-daily.service
+          systemctl mask apt-daily-upgrade.service
+          systemctl mask NetworkManager-wait-online.service
+          
+          # Enable essential services
+          systemctl enable NetworkManager.service
+          systemctl enable lightdm.service
+          systemctl enable acpid.service
+          systemctl enable upower.service
+          systemctl set-default graphical.target
+          CHEOF
+
+      - name: Configure desktop environment
+        run: |
+          echo "=== Step 5: Desktop Setup ==="
+          
+          sudo chroot build/chroot /bin/bash << 'CHEOF'
+          # Ensure Openbox configs exist for user
+          mkdir -p /home/salamos/.config/openbox
+          mkdir -p /home/salamos/.config/tint2
+          mkdir -p /home/salamos/.config/jgmenu
+          mkdir -p /home/salamos/.config/nitrogen
+          
+          # Copy system configs to user
+          if [ -d /etc/xdg/openbox ]; then
+            cp -a /etc/xdg/openbox/* /home/salamos/.config/openbox/
+          fi
+          if [ -f /etc/tint2/tint2rc ]; then
+            cp /etc/tint2/tint2rc /home/salamos/.config/tint2/
+          fi
+          
+          # Set nitrogen saved wallpaper
+          cat > /home/salamos/.config/nitrogen/nitrogen.cfg << 'NEOF'
+          [geometry]
+          posx=0
+          posy=0
+          width=1920
+          height=1080
+          
+          [Nitrogen]
+          wallpaper=/usr/share/backgrounds/salamos/salamos-wallpaper.png
+          mode=CENTERED
+          NEOF
+          
+          # Set wallpaper for root too
+          mkdir -p /root/.config/nitrogen
+          cp /home/salamos/.config/nitrogen/nitrogen.cfg /root/.config/nitrogen/
+          
+          # Fix ownership
+          chown -R salamos:salamos /home/salamos/.config
+          
+          # Set GTK theme as default
+          cat > /home/salamos/.gtkrc-2.0 << 'GEOF'
+          gtk-theme-name="SalamOS-Dark"
+          gtk-icon-theme-name="Papirus"
+          gtk-font-name="Hack 10"
+          GEOF
+          chown salamos:salamos /home/salamos/.gtkrc-2.0
+          
+          # GTK3 settings
+          mkdir -p /home/salamos/.config/gtk-3.0
+          cat > /home/salamos/.config/gtk-3.0/settings.ini << 'GEOF'
+          [Settings]
+          gtk-theme-name=SalamOS-Dark
+          gtk-icon-theme-name=Papirus
+          gtk-font-name=Hack 10
+          gtk-application-prefer-dark-theme=1
+          GEOF
+          chown -R salamos:salamos /home/salamos/.config/gtk-3.0
+          CHEOF
+
+      - name: Cleanup and optimize
+        run: |
+          echo "=== Step 6: Cleanup ==="
+          
+          sudo chroot build/chroot /bin/bash << 'CHEOF'
+          # Remove documentation
+          rm -rf /usr/share/doc/* /usr/share/info/* /usr/share/man/*
+          
+          # Keep only en and ar locales
+          cp -a /usr/share/locale/en /tmp/locale_en 2>/dev/null || true
+          cp -a /usr/share/locale/ar /tmp/locale_ar 2>/dev/null || true
+          rm -rf /usr/share/locale/*
+          mv /tmp/locale_en /usr/share/locale/en 2>/dev/null || true
+          mv /tmp/locale_ar /usr/share/locale/ar 2>/dev/null || true
+          
+          # Remove logs and temp
+          rm -rf /var/log/*
+          mkdir -p /var/log
+          touch /var/log/syslog
+          rm -rf /tmp/* /var/tmp/*
+          
+          # Clean apt
+          apt-get clean
+          rm -rf /var/cache/apt/archives/* /var/cache/apt/*.bin /var/lib/apt/lists/*
+          mkdir -p /var/lib/apt/lists/partial
+          
+          # Machine ID (unique per boot for live system)
+          dbus-uuidgen > /etc/machine-id
+          cp /etc/machine-id /var/lib/dbus/machine-id
+          echo "" > /etc/machine-id
+          
+          # Zero free space for better compression
+          dd if=/dev/zero of=/zero.fill bs=1M 2>/dev/null || true
+          rm -f /zero.fill
+          
+          # Clear history
+          cat /dev/null > ~/.bash_history
+          cat /dev/null > /home/salamos/.bash_history
+          CHEOF
+
+      - name: Create squashfs
+        run: |
+          echo "=== Step 7a: Squashfs ==="
+          sudo mkdir -p build/iso/live
+          
+          echo "Creating squashfs filesystem..."
+          sudo mksquashfs build/chroot build/iso/live/filesystem.squashfs \
+            -comp zstd \
+            -Xcompression-level 19 \
+            -no-progress \
+            -e boot/grub
+          
+          # Copy kernel and initrd
+          sudo cp build/chroot/boot/vmlinuz-* build/iso/live/vmlinuz
+          sudo cp build/chroot/boot/initrd.img-* build/iso/live/initrd
+          
+          echo "Squashfs created. Size: $(sudo du -sh build/iso/live/filesystem.squashfs | cut -f1)"
+
+      - name: Create bootable ISO
+        run: |
+          echo "=== Step 7b: ISO Creation ==="
+          
+          # Create GRUB config
+          sudo mkdir -p build/iso/boot/grub
+          
+          sudo tee build/iso/boot/grub/grub.cfg > /dev/null << 'GEOF'
+          set gfxpayload=keep
+          set default=0
+          set timeout=5
+          
+          insmod all_video
+          insmod gfxterm
+          insmod png
+          insmod part_gpt
+          insmod part_msdos
+          insmod ext2
+          
+          if background_image /boot/grub/salamos-grub.png ; then
+            set color_normal=white/black
+            set color_highlight=yellow/black
+          else
+            set color_normal=light-gray/black
+            set color_highlight=yellow/black
+          fi
+          
+          menuentry "SalamOS 2026.1 (Live)" {
+            linux /live/vmlinuz boot=live quiet splash hostname=SalamOS username=salamos
+            initrd /live/initrd
+          }
+          
+          menuentry "SalamOS 2026.1 (Live - Safe Mode)" {
+            linux /live/vmlinuz boot=live quiet splash hostname=SalamOS username=salamos nomodeset
+            initrd /live/initrd
+          }
+          
+          menuentry "SalamOS 2026.1 (Debug Mode)" {
+            linux /live/vmlinuz boot=live hostname=SalamOS username=salamos
+            initrd /live/initrd
+          }
+          
+          menuentry "System Restart" { reboot }
+          menuentry "System Shutdown" { halt }
+          GEOF
+          
+          # Copy GRUB background
+          sudo cp build/resources/salamos-grub.png build/iso/boot/grub/
+          
+          # Create EFI boot structure
+          sudo mkdir -p build/iso/EFI/BOOT
+          
+          # Generate GRUB EFI image
+          sudo grub-mkimage -O x86_64-efi \
+            -o build/iso/EFI/BOOT/BOOTX64.EFI \
+            -p "/boot/grub" \
+            all_video boot btrfs cat chain configfile echo efifwsetup \
+            efi_gop efi_uga fat font gfxmenu gfxterm gzio hfsplus \
+            iso9660 linux loadenv loopback ls lsefi normal part_apple \
+            part_msdos part_gpt png read reboot search search_fs_uuid \
+            search_fs_file search_label squash4 test true video video_fb xfs
+          
+          # Create the ISO
+          sudo xorriso -as mkisofs \
+            -iso-level 3 \
+            -full-iso9660-filenames \
+            -V "SalamOS 2026.1" \
+            -publisher "SalamOS Project" \
+            -A "SalamOS Live System" \
+            --modification-date=$(date +%Y%m%d%H%M%S00) \
+            -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
+            -eltorito-boot boot/grub/i386-pc/eltorito.img \
+            -no-emul-boot \
+            -boot-load-size 4 \
+            -boot-info-table \
+            --eltorito-catalog boot/grub/boot.cat \
+            --grub2-boot-info \
+            --efi-boot EFI/BOOT/BOOTX64.EFI \
+            -no-emul-boot \
+            --efi-boot-image \
+            --protective-msdos-label \
+            -output "SalamOS-2026.1-amd64.iso" \
+            build/iso
+          
+          echo "ISO created successfully!"
+          ls -lh SalamOS-2026.1-amd64.iso
+
+      - name: Unmount chroot
+        if: always()
+        run: |
+          sudo umount build/chroot/proc 2>/dev/null || true
+          sudo umount build/chroot/sys 2>/dev/null || true
+          sudo umount build/chroot/dev/pts 2>/dev/null || true
+          sudo umount build/chroot/dev 2>/dev/null || true
+          sudo umount build/chroot/run 2>/dev/null || true
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SalamOS-ISO
+          path: SalamOS-2026.1-amd64.iso
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v2026.1"
+          name: "SalamOS 2026.1 (Zen)"
+          body: |
+            ## SalamOS 2026.1 (Zen)
+            
+            Ultra-lightweight professional Linux distribution
+            
+            ### Features
+            - Based on Debian Bookworm (stable)
+            - Openbox WM + tint2 panel (ultra-light desktop)
+            - Custom SalamOS Dark theme
+            - Target idle RAM: ~150MB
+            - Target ISO size: < 500MB
+            - Arabic + English support
+            
+            ### Desktop
+            - Window Manager: Openbox
+            - Panel: tint2
+            - Menu: jgmenu + Rofi launcher
+            - Display Manager: LightDM
+            
+            ### Quick Keys
+            - Super+A: Application menu
+            - Super+R: Rofi launcher
+            - Super+T: Terminal
+            - Super+F: File manager
+            - Super+W: Browser
+            
+            ### Installation
+            1. Burn ISO to USB or CD
+            2. Boot from USB
+            3. Use GParted to install to disk
+            
+            ---
+            Built on: ${{ github.sha }}
+            Build date: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+          files: |
+            SalamOS-2026.1-amd64.iso
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

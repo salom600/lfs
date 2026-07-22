@@ -1,0 +1,254 @@
+/* SalamOS-Dark GTK 3 Theme */
+/* Professional dark theme with blue/red accents */
+
+@define-color bg_color #1a1a2e;
+@define-color fg_color #e0e0e0;
+@define-color base_color #16213e;
+@define-color text_color #e0e0e0;
+@define-color selected_bg_color #0f3460;
+@define-color selected_fg_color #ffffff;
+@define-color accent_color #e94560;
+@define-color headerbar_color #0f3460;
+@define-color menu_color #1a1a2e;
+@define-color tooltip_color #16213e;
+@define-color border_color #0f3460;
+@define-color shadow_color rgba(0,0,0,0.3);
+
+/* General */
+* {
+    background-color: @bg_color;
+    color: @fg_color;
+    border-color: @border_color;
+    font-family: 'Hack', 'DejaVu Sans', sans-serif;
+    font-size: 10pt;
+}
+
+/* Window */
+.window {
+    background-color: @bg_color;
+    border: 1px solid @border_color;
+}
+
+/* Header Bar */
+headerbar {
+    background-color: @headerbar_color;
+    color: @fg_color;
+    border-bottom: 1px solid @border_color;
+    padding: 4px 8px;
+}
+
+headerbar .title {
+    color: @fg_color;
+    font-weight: bold;
+}
+
+/* Button */
+button {
+    background-color: @base_color;
+    color: @fg_color;
+    border: 1px solid @border_color;
+    border-radius: 3px;
+    padding: 4px 12px;
+}
+
+button:hover {
+    background-color: @selected_bg_color;
+    color: @selected_fg_color;
+}
+
+button:active, button:checked {
+    background-color: @accent_color;
+    color: @selected_fg_color;
+}
+
+button.suggested-action {
+    background-color: @accent_color;
+    color: @selected_fg_color;
+}
+
+/* Entry / Text Input */
+entry, spinbutton {
+    background-color: @base_color;
+    color: @text_color;
+    border: 1px solid @border_color;
+    border-radius: 3px;
+    padding: 4px;
+}
+
+entry:focus, spinbutton:focus {
+    border-color: @accent_color;
+}
+
+/* Notebook / Tabs */
+notebook {
+    background-color: @bg_color;
+    border: 1px solid @border_color;
+}
+
+notebook header {
+    background-color: @headerbar_color;
+    border-bottom: 1px solid @border_color;
+}
+
+notebook tab {
+    background-color: @base_color;
+    color: @fg_color;
+    padding: 4px 12px;
+}
+
+notebook tab:checked {
+    background-color: @selected_bg_color;
+    color: @selected_fg_color;
+}
+
+/* Treeview / Lists */
+treeview {
+    background-color: @base_color;
+    color: @text_color;
+}
+
+treeview:selected {
+    background-color: @selected_bg_color;
+    color: @selected_fg_color;
+}
+
+treeview header {
+    background-color: @headerbar_color;
+    color: @fg_color;
+}
+
+/* Scrollbar */
+scrollbar {
+    background-color: @base_color;
+    border: none;
+}
+
+scrollbar slider {
+    background-color: @border_color;
+    border-radius: 3px;
+    min-width: 6px;
+}
+
+scrollbar slider:hover {
+    background-color: @accent_color;
+}
+
+/* Menu */
+menu, .menu {
+    background-color: @menu_color;
+    color: @fg_color;
+    border: 1px solid @border_color;
+    padding: 4px;
+}
+
+menuitem, .menuitem {
+    background-color: transparent;
+    color: @fg_color;
+    padding: 4px 8px;
+}
+
+menuitem:hover, .menuitem:hover {
+    background-color: @selected_bg_color;
+    color: @selected_fg_color;
+}
+
+/* Tooltip */
+tooltip {
+    background-color: @tooltip_color;
+    color: @fg_color;
+    border: 1px solid @border_color;
+    border-radius: 3px;
+    padding: 4px;
+}
+
+/* Dialog */
+dialog, .dialog {
+    background-color: @bg_color;
+    border: 1px solid @border_color;
+}
+
+/* Scale / Slider */
+scale slider {
+    background-color: @selected_bg_color;
+    border: 1px solid @border_color;
+    border-radius: 50%;
+}
+
+scale trough {
+    background-color: @base_color;
+    border: 1px solid @border_color;
+    border-radius: 3px;
+}
+
+/* Check / Radio buttons */
+checkbutton check, radiobutton radio {
+    background-color: @base_color;
+    border: 1px solid @border_color;
+    color: @fg_color;
+}
+
+checkbutton check:checked, radiobutton radio:checked {
+    background-color: @accent_color;
+    color: @selected_fg_color;
+}
+
+/* Switch */
+switch {
+    background-color: @base_color;
+    border: 1px solid @border_color;
+    border-radius: 3px;
+}
+
+switch:checked {
+    background-color: @accent_color;
+}
+
+switch slider {
+    background-color: @selected_bg_color;
+    border-radius: 3px;
+}
+
+/* Progress Bar */
+progressbar {
+    background-color: @base_color;
+    border: 1px solid @border_color;
+    border-radius: 3px;
+}
+
+progressbar progress {
+    background-color: @accent_color;
+    border-radius: 3px;
+}
+
+/* Status Bar */
+statusbar {
+    background-color: @headerbar_color;
+    color: @fg_color;
+}
+
+/* Label */
+label {
+    color: @fg_color;
+}
+
+/* Separator */
+separator {
+    background-color: @border_color;
+}
+
+/* Calendar */
+calendar {
+    background-color: @base_color;
+    color: @text_color;
+    border: 1px solid @border_color;
+}
+
+calendar:selected {
+    background-color: @selected_bg_color;
+    color: @selected_fg_color;
+}
+
+calendar.header {
+    background-color: @headerbar_color;
+    color: @fg_color;
+}

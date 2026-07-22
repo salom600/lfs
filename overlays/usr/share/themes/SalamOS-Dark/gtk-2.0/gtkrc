@@ -1,0 +1,47 @@
+# SalamOS GTK 2 Theme
+gtk-color-scheme = "
+    bg_color:#1a1a2e
+    fg_color:#e0e0e0
+    base_color:#16213e
+    text_color:#e0e0e0
+    selected_bg_color:#0f3460
+    selected_fg_color:#ffffff
+    accent_color:#e94560
+"
+
+style "salamos-default"
+{
+    bg[NORMAL]   = "#1a1a2e"
+    bg[PRELIGHT] = "#0f3460"
+    bg[ACTIVE]   = "#e94560"
+    fg[NORMAL]   = "#e0e0e0"
+    fg[PRELIGHT] = "#ffffff"
+    base[NORMAL]   = "#16213e"
+    base[SELECTED] = "#0f3460"
+    text[NORMAL]   = "#e0e0e0"
+    text[SELECTED] = "#ffffff"
+    font_name = "Hack 10"
+}
+
+style "salamos-button" = "salamos-default"
+{
+    bg[NORMAL] = "#16213e"
+    bg[PRELIGHT] = "#0f3460"
+    bg[ACTIVE] = "#e94560"
+}
+
+style "salamos-entry" = "salamos-default"
+{
+    bg[NORMAL] = "#16213e"
+}
+
+style "salamos-menu" = "salamos-default"
+{
+    bg[NORMAL] = "#1a1a2e"
+    bg[PRELIGHT] = "#0f3460"
+}
+
+class "GtkWidget" style "salamos-default"
+class "GtkButton" style "salamos-button"
+class "GtkEntry" style "salamos-entry"
+widget_class "*Menu*" style "salamos-menu"

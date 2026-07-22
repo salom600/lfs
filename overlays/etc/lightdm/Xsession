@@ -1,0 +1,21 @@
+# SalamOS Default Xsession
+# Sets up the environment for Openbox
+# ============================================
+
+#!/bin/bash
+
+# Set GTK theme
+export GTK_THEME=SalamOS-Dark
+
+# Set icon theme
+export XDG_CURRENT_DESKTOP=openbox
+
+# Set cursor theme
+export XCURSOR_THEME=Adwaita
+export XCURSOR_SIZE=24
+
+# Set keyboard layout
+setxkbmap -layout "us,ara" -option "grp:alt_shift_toggle"
+
+# Start Openbox session
+exec openbox-session

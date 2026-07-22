@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=SalamOS Help
+Comment=Quick command reference
+Exec=lxterminal -e bash -c "echo 'SalamOS Quick Commands:'; echo '  update    - Update system'; echo '  install   - Install package'; echo '  remove    - Remove package'; echo '  search    - Search packages'; echo '  clean     - Clean system'; echo; echo 'Keyboard Shortcuts:'; echo '  Super+A   - App menu'; echo '  Super+R   - Rofi launcher'; echo '  Super+T   - Terminal'; echo '  Super+F   - File manager'; echo '  Super+W   - Browser'; echo '  Super+L   - Lock screen'; echo; echo 'Press Enter to close...'; read"
+Terminal=false
+Categories=System;Help;
+Icon=salamos-logo

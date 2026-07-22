@@ -1,0 +1,102 @@
+# SalamOS tint2 Panel Configuration
+# Minimal, professional bottom panel
+# ============================================
+
+# Backgrounds
+# Background 1: Active panel background
+rounded = 2
+border_width = 0
+background_color = #1a1a2e 100
+border_color = #0f3460 100
+
+# Background 2: Inactive panel background
+rounded = 2
+border_width = 0
+background_color = #16213e 100
+border_color = #0f3460 100
+
+# Background 3: Active task
+rounded = 2
+border_width = 1
+background_color = #0f3460 80
+border_color = #e94560 100
+
+# Background 4: Urgent task
+rounded = 2
+border_width = 1
+background_color = #e94560 100
+border_color = #e94560 100
+
+# Panel
+panel_items = LTSBC
+panel_position = bottom center horizontal
+panel_size = 100% 32
+panel_margin = 0 0
+panel_padding = 4 0 4
+panel_background_id = 1
+
+# Taskbar
+taskbar_padding = 2 0 4
+taskbar_background_id = 2
+taskbar_active_background_id = 3
+taskbar_urgent_background_id = 4
+taskbar_name = 1
+taskbar_name_padding = 6 3
+taskbar_name_font = Hack 9
+taskbar_name_active_font_color = #ffffff 100
+taskbar_name_font_color = #a0a0b0 100
+taskbar_name_urgent_font_color = #ffffff 100
+
+# Systray
+systray_padding = 4 0 4
+systray_background_id = 2
+systray_sort = right
+systray_icon_size = 16
+systray_icon_ascent = 4
+
+# Clock
+time1_format = %H:%M
+time1_font = Hack 10
+time2_format = %A %d %B
+time2_font = Hack 7
+clock_font_color = #e0e0e0 100
+clock_padding = 8 4
+clock_background_id = 2
+clock_tooltip_timezone = Africa/Lagos
+clock_lclick_command = lxterminal -e calcurse
+clock_rclick_command = orage
+
+# Battery
+battery_padding = 4 0 4
+battery_background_id = 2
+battery_center = true
+battery_font = Hack 9
+battery_font_color = #e0e0e0 100
+
+# Launchers
+launcher_padding = 4 0 4
+launcher_background_id = 2
+launcher_icon_theme = Papirus
+launcher_icon_size = 20
+launcher_item_app = /usr/share/applications/firefox-esr.desktop
+launcher_item_app = /usr/share/applications/pcmanfm.desktop
+launcher_item_app = /usr/share/applications/lxterminal.desktop
+
+# Separator
+separator_padding = 4 0 4
+separator_background_id = 2
+separator_color = #0f3460 100
+
+# Mouse actions
+mouse_middle = none
+mouse_right = close
+mouse_scroll_up = toggle
+mouse_scroll_down = iconify
+
+# Tooltips
+tooltip_padding = 4 4
+tooltip_background_id = 2
+tooltip_font_color = #e0e0e0 100
+tooltip_font = Hack 9
+tooltip_show_timeout = 0.5
+tooltip_hide_timeout = 0.5
