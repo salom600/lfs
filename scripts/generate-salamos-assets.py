@@ -129,7 +129,8 @@ def create_grub_background(output_path):
     print(f"GRUB background saved to {output_path}")
 
 if __name__ == '__main__':
-    base_dir = '/home/z/my-project/lfs/build/resources'
+    # Use relative path so it works both locally and in GitHub Actions
+    base_dir = os.environ.get('SALAMOS_BUILD_DIR', 'build/resources')
     create_wallpaper(os.path.join(base_dir, 'salamos-wallpaper.png'))
     create_logo(os.path.join(base_dir, 'salamos-logo.png'))
     create_grub_background(os.path.join(base_dir, 'salamos-grub.png'))

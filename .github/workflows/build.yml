@@ -43,405 +43,7 @@ jobs:
       - name: Generate SalamOS assets
         run: |
           mkdir -p build/resources
-          python3 << 'PYEOF'
-          from PIL import Image, ImageDraw, ImageFont
-          BG=(26,26,46); ACCENT=(233,69,96); TEXT=(224,224,224); HEADER=(15,52,96)
-          img=Image.new('RGB',(1920,1080),BG); d=ImageDraw.Draw(img)
-          for y in range(1080):
-              r=y/1080; d.line([(0,y),(1920,y)],fill=(int(BG[0]*(1-r*0.05)),int(BG[1]*(1-r*0.05)),int(BG[2]*(1-r*0.15))))
-          d.ellipse([920-80,480-80,920+80,480+80],outline=ACCENT,width=3)
-          d.arc([920-56,480-56,920+56,480],180,360,fill=ACCENT,width=4)
-          d.arc([920-56,480,920+56,480+56],0,180,fill=ACCENT,width=4)
-          d.line([(864,480),(976,480)],fill=TEXT,width=2)
-          try: fl=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',48); fm=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',20); fs=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',14)
-          except: fl=fm=fs=ImageFont.load_default()
-          d.text((860,530),'SalamOS',fill=TEXT,font=fl)
-          d.text((800,590),'Ultra-lightweight Professional Linux',fill=HEADER,font=fm)
-          d.text((870,620),'2026.1 Zen',fill=ACCENT,font=fs)
-          img.save('build/resources/salamos-wallpaper.png')
-          img2=Image.new('RGBA',(256,256),(0,0,0,0)); d2=ImageDraw.Draw(img2)
-          d2.ellipse([128-60,128-60,128+60,128+60],outline=ACCENT,width=3)
-          img2.save('build/resources/salamos-logo.png')
-          img3=Image.new('RGB',(640,480),BG); d3=ImageDraw.Draw(img3)
-          d3.text((250,240),'SalamOS',fill=TEXT,font=fl)
-          img3.save('build/resources/salamos-grub.png')
-          print('Assets generated successfully')
-          PYEOF
-
-      - name: Write chroot scripts
-        run: |
-          mkdir -p build/scripts
-
-          # Script 1: chroot-setup.sh
-          cat > build/scripts/chroot-setup.sh << 'SEOF'
-          #!/bin/bash
-          export PATH=/usr/sbin:/usr/bin:/sbin:/bin
-          export DEBIAN_FRONTEND=noninteractive
-
-          apt-get update
-          echo "root:root" | chpasswd
-          useradd -m -s /bin/bash -G sudo,adm,disk salamos
-          echo "salamos:salamos" | chpasswd
-          sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-          sed -i 's/# ar_SA.UTF-8 UTF-8/ar_SA.UTF-8 UTF-8/' /etc/locale.gen
-          locale-gen
-          echo 'LANG=en_US.UTF-8' > /etc/default/locale
-          echo 'Africa/Lagos' > /etc/timezone
-          ln -sf /usr/share/zoneinfo/Africa/Lagos /etc/localtime
-          echo 'salamos ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/salamos
-          chmod 440 /etc/sudoers.d/salamos
-          echo "Chroot setup done"
-          SEOF
-
-          # Script 2: install-packages.sh
-          cat > build/scripts/install-packages.sh << 'PEOF'
-          #!/bin/bash
-          export PATH=/usr/sbin:/usr/bin:/sbin:/bin
-          export DEBIAN_FRONTEND=noninteractive
-
-          apt-get update
-
-          # === CORE SYSTEM (must succeed) ===
-          apt-get install -y --no-install-recommends \
-            linux-image-amd64 \
-            initramfs-tools \
-            live-boot \
-            grub2 grub-pc grub-pc-bin \
-            systemd dbus \
-            network-manager network-manager-gnome \
-            wpasupplicant \
-            sudo polkitd ufw \
-            curl wget ca-certificates \
-            openssh-client \
-            xserver-xorg-core xserver-xorg-video-all xserver-xorg-input-all \
-            xorg xinit \
-            lightdm lightdm-gtk-greeter \
-            openbox obconf \
-            pcmanfm lxterminal mousepad \
-            firefox-esr \
-            alsa-utils pulseaudio pulseaudio-utils \
-            acpi acpid upower \
-            htop nano vim-tiny \
-            gvfs gvfs-backends udisks2 \
-            xdg-utils desktop-file-utils \
-            fonts-dejavu fonts-hack \
-            adwaita-icon-theme \
-            firmware-linux-free \
-            ntfs-3g dosfstools \
-            usbutils pciutils
-
-          # === USER-FRIENDLY DESKTOP (must succeed) ===
-          apt-get install -y --no-install-recommends \
-            tint2 jgmenu \
-            feh nitrogen picom \
-            conky rofi \
-            gtk2-engines \
-            papirus-icon-theme \
-            fonts-liberation fonts-noto \
-            file-roller p7zip-full unzip \
-            gparted \
-            lshw tlp \
-            evince scrot lxappearance \
-            dunst \
-            volumeicon-alsa \
-            lxshortcut \
-            synaptic \
-            packagekit \
-            calamares \
-            calamares-settings-debian
-
-          # === OPTIONAL (allow failure) ===
-          apt-get install -y --no-install-recommends firmware-misc-nonfree 2>/dev/null || echo "SKIP: firmware-misc-nonfree"
-          apt-get install -y --no-install-recommends live-boot-initramfs-tools 2>/dev/null || echo "SKIP: live-boot-initramfs-tools"
-          apt-get install -y --no-install-recommends gtk3-engines-breeze 2>/dev/null || echo "SKIP: gtk3-engines-breeze"
-          apt-get install -y --no-install-recommends pavucontrol 2>/dev/null || echo "SKIP: pavucontrol"
-          apt-get install -y --no-install-recommends firefox-esr-l10n-ar 2>/dev/null || echo "SKIP: firefox-esr-l10n-ar"
-          apt-get install -y --no-install-recommends fonts-noto-cjk 2>/dev/null || echo "SKIP: fonts-noto-cjk"
-          apt-get install -y --no-install-recommends light-locker 2>/dev/null || echo "SKIP: light-locker"
-          apt-get install -y --no-install-recommends xfce4-power-manager 2>/dev/null || echo "SKIP: xfce4-power-manager"
-
-          apt-get autoremove -y --purge 2>/dev/null || true
-          apt-get clean
-          rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
-
-          echo "=== Running update-initramfs ==="
-          which update-initramfs 2>/dev/null || ls /usr/sbin/update-initramfs 2>/dev/null || echo "WARNING: update-initramfs not found"
-          /usr/sbin/update-initramfs -u -k all || echo "WARNING: update-initramfs failed"
-
-          echo "Packages installed successfully"
-          PEOF
-
-          # Script 3: customize.sh
-          cat > build/scripts/customize.sh << 'CEOF'
-          #!/bin/bash
-          set -e
-          export PATH=/usr/sbin:/usr/bin:/sbin:/bin
-
-          cat > /etc/os-release << 'OEOF'
-          NAME="SalamOS"
-          VERSION="2026.1 (Zen)"
-          ID=salamos
-          ID_LIKE=debian
-          PRETTY_NAME="SalamOS 2026.1"
-          VERSION_ID="2026.1"
-          HOME_URL="https://github.com/salom600/lfs"
-          SUPPORT_URL="https://github.com/salom600/lfs"
-          BUG_REPORT_URL="https://github.com/salom600/lfs/issues"
-          VERSION_CODENAME=zen
-          DEBIAN_CODENAME=bookworm
-          OEOF
-
-          echo 'SalamOS 2026.1' > /etc/issue
-          echo 'SalamOS 2026.1' > /etc/issue.net
-
-          cat > /etc/motd << 'MEOF'
-          Welcome to SalamOS 2026.1 (Zen)
-          Ultra-lightweight professional Linux distribution
-
-          Quick commands:
-            update  - Update system
-            install - Install packages
-            clean   - Clean system
-          MEOF
-
-          cat > /home/salamos/.bashrc << 'BEOF'
-          export PS1='\u@\h:\w\$ '
-          export EDITOR=nano
-          export BROWSER=firefox-esr
-          alias ll='ls -la'
-          alias update='sudo apt-get update && sudo apt-get upgrade'
-          alias install='sudo apt-get install'
-          alias remove='sudo apt-get remove --purge'
-          alias search='apt-cache search'
-          alias clean='sudo apt-get autoremove --purge && sudo apt-get clean'
-          BEOF
-          chown salamos:salamos /home/salamos/.bashrc
-
-          cat > /etc/default/grub << 'GEOF'
-          GRUB_DEFAULT=0
-          GRUB_TIMEOUT=5
-          GRUB_DISTRIBUTOR="SalamOS"
-          GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
-          GRUB_CMDLINE_LINUX=""
-          GEOF
-
-          systemctl mask apt-daily.service || true
-          systemctl mask apt-daily-upgrade.service || true
-          systemctl mask apt-daily.timer || true
-          systemctl mask apt-daily-upgrade.timer || true
-          systemctl mask NetworkManager-wait-online.service || true
-
-          systemctl enable NetworkManager.service || true
-          systemctl enable lightdm.service || true
-          systemctl enable acpid.service || true
-          systemctl enable upower.service || true
-          systemctl set-default graphical.target || true
-
-          echo "Customization done"
-          CEOF
-
-          # Script 4: desktop-setup.sh
-          cat > build/scripts/desktop-setup.sh << 'DEOF'
-          #!/bin/bash
-          export PATH=/usr/sbin:/usr/bin:/sbin:/bin
-
-          mkdir -p /home/salamos/.config/openbox
-          mkdir -p /home/salamos/.config/tint2
-          mkdir -p /home/salamos/.config/jgmenu
-          mkdir -p /home/salamos/.config/nitrogen
-          mkdir -p /home/salamos/Desktop
-
-          if [ -d /etc/xdg/openbox ]; then
-            cp -a /etc/xdg/openbox/* /home/salamos/.config/openbox/
-          fi
-          if [ -f /etc/tint2/tint2rc ]; then
-            cp /etc/tint2/tint2rc /home/salamos/.config/tint2/
-          fi
-
-          cat > /home/salamos/.config/nitrogen/nitrogen.cfg << 'NEOF'
-          [geometry]
-          posx=0
-          posy=0
-          width=1920
-          height=1080
-
-          [Nitrogen]
-          wallpaper=/usr/share/backgrounds/salamos/salamos-wallpaper.png
-          mode=CENTERED
-          NEOF
-
-          mkdir -p /root/.config/nitrogen
-          cp /home/salamos/.config/nitrogen/nitrogen.cfg /root/.config/nitrogen/
-
-          # Create desktop shortcuts for easy access (like Windows)
-          cat > /home/salamos/Desktop/install-salamos.desktop << 'IEOF'
-          [Desktop Entry]
-          Type=Application
-          Name=Install SalamOS
-          Comment=Install SalamOS to hard drive
-          Exec=calamares
-          Icon=system-software-install
-          Categories=System;
-          StartupNotify=true
-          IEOF
-
-          cat > /home/salamos/Desktop/software-center.desktop << 'SEOF'
-          [Desktop Entry]
-          Type=Application
-          Name=Software Center
-          Comment=Install applications with one click
-          Exec=salamos-software-center gui
-          Icon=system-software-install
-          Categories=System;
-          StartupNotify=true
-          SEOF
-
-          cat > /home/salamos/Desktop/firefox.desktop << 'FEOF'
-          [Desktop Entry]
-          Type=Application
-          Name=Firefox
-          Comment=Web Browser
-          Exec=firefox-esr
-          Icon=firefox
-          Categories=Network;WebBrowser;
-          StartupNotify=true
-          FEOF
-
-          cat > /home/salamos/Desktop/file-manager.desktop << 'FMEOF'
-          [Desktop Entry]
-          Type=Application
-          Name=Files
-          Comment=File Manager
-          Exec=pcmanfm
-          Icon=system-file-manager
-          Categories=System;FileManager;
-          StartupNotify=true
-          FMEOF
-
-          cat > /home/salamos/Desktop/terminal.desktop << 'TEOF'
-          [Desktop Entry]
-          Type=Application
-          Name=Terminal
-          Comment=Command Line
-          Exec=lxterminal
-          Icon=utilities-terminal
-          Categories=System;TerminalEmulator;
-          StartupNotify=true
-          TEOF
-
-          # Make Software Center executable
-          chmod +x /usr/local/bin/salamos-software-center
-
-          # Make desktop shortcuts trusted (show icons on desktop)
-          chmod +x /home/salamos/Desktop/*.desktop
-
-          chown -R salamos:salamos /home/salamos/.config
-          chown -R salamos:salamos /home/salamos/Desktop
-
-          echo 'gtk-theme-name="SalamOS-Dark"' > /home/salamos/.gtkrc-2.0
-          echo 'gtk-icon-theme-name="Papirus"' >> /home/salamos/.gtkrc-2.0
-          echo 'gtk-font-name="Hack 10"' >> /home/salamos/.gtkrc-2.0
-          chown salamos:salamos /home/salamos/.gtkrc-2.0
-
-          mkdir -p /home/salamos/.config/gtk-3.0
-          cat > /home/salamos/.config/gtk-3.0/settings.ini << 'GEOF'
-          [Settings]
-          gtk-theme-name=SalamOS-Dark
-          gtk-icon-theme-name=Papirus
-          gtk-font-name=Hack 10
-          gtk-application-prefer-dark-theme=1
-          GEOF
-          chown -R salamos:salamos /home/salamos/.config/gtk-3.0
-
-          # Create dunst notification config
-          mkdir -p /home/salamos/.config/dunst
-          cat > /home/salamos/.config/dunst/dunstrc << 'DEOF'
-          [global]
-          font = Hack 10
-          format = "%s: %b"
-          sort = yes
-          indicate_hidden = yes
-          alignment = left
-          show_age_threshold = 60
-          word_wrap = yes
-          geometry = "300x5-30+20"
-          shrink = no
-          transparency = 10
-          padding = 8
-          horizontal_padding = 8
-          frame_color = "#0f3460"
-          frame_width = 1
-          separator_height = 2
-          separator_color = "#0f3460"
-
-          [urgency_low]
-          background = "#16213e"
-          foreground = "#e0e0e0"
-          timeout = 5
-
-          [urgency_normal]
-          background = "#0f3460"
-          foreground = "#ffffff"
-          timeout = 10
-
-          [urgency_critical]
-          background = "#e94560"
-          foreground = "#ffffff"
-          timeout = 0
-          DEOF
-          chown -R salamos:salamos /home/salamos/.config/dunst
-
-          echo "Desktop setup done"
-          DEOF
-
-          # Script 5: cleanup.sh
-          cat > build/scripts/cleanup.sh << 'CLEOF'
-          #!/bin/bash
-          set -e
-          export PATH=/usr/sbin:/usr/bin:/sbin:/bin
-
-          rm -rf /usr/share/doc/* /usr/share/info/* /usr/share/man/*
-
-          cp -a /usr/share/locale/en /tmp/locale_en 2>/dev/null || true
-          cp -a /usr/share/locale/ar /tmp/locale_ar 2>/dev/null || true
-          rm -rf /usr/share/locale/*
-          mv /tmp/locale_en /usr/share/locale/en 2>/dev/null || true
-          mv /tmp/locale_ar /usr/share/locale/ar 2>/dev/null || true
-
-          rm -rf /var/log/*
-          mkdir -p /var/log
-          touch /var/log/syslog
-          rm -rf /tmp/* /var/tmp/*
-
-          apt-get clean 2>/dev/null || true
-          rm -rf /var/cache/apt/archives/* /var/cache/apt/*.bin /var/lib/apt/lists/*
-          mkdir -p /var/lib/apt/lists/partial
-
-          dbus-uuidgen > /etc/machine-id 2>/dev/null || true
-          cp /etc/machine-id /var/lib/dbus/machine-id 2>/dev/null || true
-          printf '' > /etc/machine-id
-
-          dd if=/dev/zero of=/zero.fill bs=1M 2>/dev/null || true
-          rm -f /zero.fill
-
-          cat /dev/null > ~/.bash_history 2>/dev/null || true
-          cat /dev/null > /home/salamos/.bash_history 2>/dev/null || true
-
-          echo "Cleanup done"
-          CLEOF
-
-          chmod +x build/scripts/*.sh
-
-          # Also write apt config (no indentation issues)
-          printf 'APT::Install-Recommends "false";\nAPT::Install-Suggests "false";\nAPT::AutoRemove::RecommendsImportant "false";\nAPT::AutoRemove::SuggestsImportant "false";\n' > build/scripts/apt-no-recommends.conf
-
-          # Write apt sources (no indentation)
-          printf 'deb http://deb.debian.org/debian bookworm main contrib non-free-firmware\ndeb http://deb.debian.org/debian bookworm-updates main contrib non-free-firmware\ndeb http://deb.debian.org/debian-security bookworm-security main contrib non-free-firmware\n' > build/scripts/sources.list
-
-          # Write keyboard config
-          printf 'XKBMODEL="pc105"\nXKBLAYOUT="us,ara"\nXKBOPTIONS="grp:alt_shift_toggle"\n' > build/scripts/keyboard-config
-
-          echo "All chroot scripts written"
+          python3 scripts/generate-salamos-assets.py
 
       - name: Create base Debian system (debootstrap)
         run: |
@@ -466,16 +68,15 @@ jobs:
           sudo mount --bind /sys build/chroot/sys
           sudo mount --bind /run build/chroot/run
 
-          # Copy pre-written config files (no indentation issues)
-          sudo cp build/scripts/sources.list build/chroot/etc/apt/sources.list
-          sudo cp build/scripts/apt-no-recommends.conf build/chroot/etc/apt/apt.conf.d/99-no-recommends
+          # Copy config files into chroot
+          sudo cp scripts/chroot/apt-sources.list build/chroot/etc/apt/sources.list
+          sudo cp scripts/chroot/apt-no-recommends.conf build/chroot/etc/apt/apt.conf.d/99-no-recommends
           sudo cp /etc/resolv.conf build/chroot/etc/resolv.conf
           echo "SalamOS" | sudo tee build/chroot/etc/hostname > /dev/null
           printf '127.0.0.1       localhost\n127.0.1.1       SalamOS\n::1     localhost ip6-localhost ip6-loopback\n' | sudo tee build/chroot/etc/hosts > /dev/null
-          sudo cp build/scripts/keyboard-config build/chroot/etc/default/keyboard
 
           # Copy and execute chroot-setup script
-          sudo cp build/scripts/chroot-setup.sh build/chroot/tmp/chroot-setup.sh
+          sudo cp scripts/chroot/chroot-setup.sh build/chroot/tmp/chroot-setup.sh
           sudo chroot build/chroot /bin/bash /tmp/chroot-setup.sh
           sudo rm -f build/chroot/tmp/chroot-setup.sh 2>/dev/null || true
           echo "Chroot setup completed"
@@ -483,7 +84,7 @@ jobs:
       - name: Install packages
         run: |
           echo "=== Step 3: Package Installation ==="
-          sudo cp build/scripts/install-packages.sh build/chroot/tmp/install-packages.sh
+          sudo cp scripts/chroot/install-packages.sh build/chroot/tmp/install-packages.sh
           sudo chroot build/chroot /bin/bash /tmp/install-packages.sh
           sudo rm -f build/chroot/tmp/install-packages.sh 2>/dev/null || true
           echo "Packages installed. Size: $(sudo du -sh build/chroot | cut -f1)"
@@ -500,7 +101,7 @@ jobs:
           sudo cp build/resources/salamos-wallpaper.png build/chroot/usr/share/backgrounds/salamos/
           sudo cp build/resources/salamos-logo.png build/chroot/usr/share/pixmaps/
 
-          sudo cp build/scripts/customize.sh build/chroot/tmp/customize.sh
+          sudo cp scripts/chroot/customize.sh build/chroot/tmp/customize.sh
           sudo chroot build/chroot /bin/bash /tmp/customize.sh
           sudo rm -f build/chroot/tmp/customize.sh 2>/dev/null || true
           echo "Customization completed"
@@ -508,14 +109,14 @@ jobs:
       - name: Configure desktop environment
         run: |
           echo "=== Step 5: Desktop Setup ==="
-          sudo cp build/scripts/desktop-setup.sh build/chroot/tmp/desktop-setup.sh
+          sudo cp scripts/chroot/desktop-setup.sh build/chroot/tmp/desktop-setup.sh
           sudo chroot build/chroot /bin/bash /tmp/desktop-setup.sh
           sudo rm -f build/chroot/tmp/desktop-setup.sh 2>/dev/null || true
 
       - name: Cleanup and optimize
         run: |
           echo "=== Step 6: Cleanup ==="
-          sudo cp build/scripts/cleanup.sh build/chroot/tmp/cleanup.sh
+          sudo cp scripts/chroot/cleanup.sh build/chroot/tmp/cleanup.sh
           sudo chroot build/chroot /bin/bash /tmp/cleanup.sh
           sudo rm -f build/chroot/tmp/cleanup.sh 2>/dev/null || true
           echo "Cleanup completed. Size: $(sudo du -sh build/chroot | cut -f1)"
@@ -539,33 +140,7 @@ jobs:
           sudo mkdir -p build/iso/boot/grub
           sudo mkdir -p build/iso/EFI/BOOT
 
-          cat > /tmp/grub.cfg << 'GEOF'
-          set gfxpayload=keep
-          set default=0
-          set timeout=5
-          insmod all_video
-          insmod gfxterm
-          insmod png
-          insmod part_gpt
-          insmod part_msdos
-          insmod ext2
-
-          menuentry "SalamOS 2026.1 (Live)" {
-            linux /live/vmlinuz boot=live quiet splash hostname=SalamOS username=salamos
-            initrd /live/initrd
-          }
-          menuentry "SalamOS 2026.1 (Live - Safe Mode)" {
-            linux /live/vmlinuz boot=live quiet splash hostname=SalamOS username=salamos nomodeset
-            initrd /live/initrd
-          }
-          menuentry "SalamOS 2026.1 (Debug Mode)" {
-            linux /live/vmlinuz boot=live hostname=SalamOS username=salamos
-            initrd /live/initrd
-          }
-          menuentry "System Restart" { reboot }
-          menuentry "System Shutdown" { halt }
-          GEOF
-          sudo cp /tmp/grub.cfg build/iso/boot/grub/grub.cfg
+          sudo cp scripts/chroot/grub.cfg build/iso/boot/grub/grub.cfg
           sudo cp build/resources/salamos-grub.png build/iso/boot/grub/
 
           sudo grub-mkimage -O x86_64-efi \
@@ -641,12 +216,13 @@ jobs:
             - Custom SalamOS Dark theme
             - Target idle RAM: ~150MB | ISO size: < 500MB
             - Arabic + English support
+            - One-click software install (Software Center + Synaptic + GDebi)
 
             ### Quick Keys
             Super+A: Menu | Super+R: Launcher | Super+T: Terminal | Super+F: Files | Super+W: Browser
 
             ### Install
-            1. Burn ISO to USB  2. Boot from USB  3. Use GParted to install
+            1. Burn ISO to USB  2. Boot from USB  3. Double-click "Install SalamOS" on desktop
           files: |
             SalamOS-2026.1-amd64.iso
         env:
