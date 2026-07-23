@@ -119,7 +119,7 @@ show_system() {
         1) sudo apt-get install -y gparted ;;
         2) sudo apt-get install -y tlp ;;
         3) sudo apt-get install -y pavucontrol ;;
-        4) sudo apt-get install -y nvidia-driver ;;
+        4) sudo apt-get install -y nvidia-driver 2>/dev/null || show_msg "NVIDIA Drivers" "Enable non-free repo, then: sudo apt install nvidia-driver" ;;
         5) sudo apt-get install -y flatpak ;;
         *) echo "Cancelled" ;;
     esac
@@ -136,7 +136,7 @@ show_development() {
     2>&1 >/dev/tty)
     
     case "$CHOICE" in
-        1) sudo apt-get install -y codium || flatpak install flathub com.vscodium.codium ;;
+        1) sudo apt-get install -y vscodium 2>/dev/null || flatpak install flathub com.vscodium.codium ;;
         2) sudo apt-get install -y python3 python3-pip ;;
         3) sudo apt-get install -y git ;;
         4) sudo apt-get install -y nodejs npm ;;
@@ -155,7 +155,7 @@ show_themes() {
     
     case "$CHOICE" in
         1) flatpak install flathub org.gtk.Gtk3theme.Adwaita-dark ;;
-        2) sudo apt-get install -y fonts-noto-core ;;
+        2) sudo apt-get install -y fonts-noto ;;
         3) sudo apt-get install -y fonts-noto-cjk ;;
         *) echo "Cancelled" ;;
     esac

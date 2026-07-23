@@ -53,14 +53,13 @@ apt-get install -y --no-install-recommends \
   dunst \
   lxappearance \
   volumeicon-alsa \
-  nm-applet \
+  network-manager-gnome \
   xdg-user-dirs \
   gtk2-engines \
   htop \
   scrot \
   synaptic gdebi \
-  calamares calamares-settings-debian \
-  lxshortcut
+  calamares calamares-settings-debian
 
 # =============================================
 # TIER 3: GAMING SUPPORT (the competitive edge)

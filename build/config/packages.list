@@ -75,7 +75,7 @@ rofi
 network-manager
 network-manager-gnome
 wpasupplicant
-dhcpd
+isc-dhcp-client
 curl
 wget
 ca-certificates
@@ -86,7 +86,7 @@ rsync
 alsa-utils
 pulseaudio
 pulseaudio-utils
-pavucontrol-qt
+pavucontrol
 
 # === File Management & Archives ===
 file-roller
@@ -128,7 +128,7 @@ mtools
 
 # === Appearance ===
 gtk2-engines
-gtk3-engines-breeze
+# gtk3-engines-breeze removed (not in Debian repos)
 adwaita-icon-theme
 papirus-icon-theme
 fonts-liberation
