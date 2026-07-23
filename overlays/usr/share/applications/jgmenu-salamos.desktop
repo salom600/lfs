@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=SalamOS Menu
+Comment=Application Menu - Start Menu
+Exec=jgmenu --at-pointer --config-file=/etc/jgmenu/jgmenu.conf
+Icon=start-here
+Categories=System;
+StartupNotify=false
+NoDisplay=false

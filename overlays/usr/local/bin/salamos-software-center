@@ -1,5 +1,6 @@
 #!/bin/bash
-# SalamOS Software Center - Install apps with one click
+# SalamOS Software Center - 2026 Modern Edition
+# One-click app installation like Windows
 # ============================================
 export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 
@@ -21,6 +22,9 @@ declare -A APPS=(
   ["Discord"]="discord"
   ["BleachBit (Cleaner)"]="bleachbit"
   ["Timeshift (Backup)"]="timeshift"
+  ["Steam (Games)"]="steam"
+  ["Lutris (Games)"]="lutris"
+  ["Wine (Windows apps)"]="wine"
 )
 
 case "${1:-}" in
@@ -40,11 +44,13 @@ case "${1:-}" in
     done | sort ;;
   gui)
     if command -v rofi &>/dev/null; then
-      choice=$(for app in "${!APPS[@]}"; do echo "$app → ${APPS[$app]}"; done | sort | \
-        rofi -dmenu -p "SalamOS Software Center" -i -width 600 -lines 15)
+      choice=$(for app in "${!APPS[@]}"; do echo "$app"; done | sort | \
+        rofi -dmenu -p "SalamOS Software Center" -i -config ~/.config/rofi/config.rasi)
       if [ -n "$choice" ]; then
-        pkg=$(echo "$choice" | sed 's/.*→ //' | tr -d ' ')
-        lxterminal -e bash -c "sudo apt-get install -y $pkg; echo 'Done! Press Enter.'; read"
+        pkg="${APPS[$choice]}"
+        if [ -n "$pkg" ]; then
+          lxterminal -e bash -c "sudo apt-get install -y $pkg; echo 'Done! Press Enter to close.'; read"
+        fi
       fi
     else
       echo "=== SalamOS Software Center ==="

@@ -1,5 +1,6 @@
 #!/bin/bash
-# SalamOS Step 05: Desktop Setup - Configure Openbox desktop environment
+# SalamOS Step 05: Desktop Setup - 2026 Modern Professional Edition
+# Configure Openbox desktop environment with modern design
 # ============================================
 
 set -euo pipefail
@@ -10,98 +11,99 @@ source "$BUILD_ROOT/config/vars"
 
 CHROOT_DIR="$BUILD_ROOT/$CHROOT_DIR"
 
-echo "[05-desktop] Setting up Openbox desktop environment..."
+echo "[05-desktop] Setting up Openbox desktop environment - 2026 Edition..."
 
 chroot "$CHROOT_DIR" /bin/bash << CHEOF
 
-# Create Openbox autostart script
+# === Openbox autostart script - Modern 2026 ===
 cat > /etc/xdg/openbox/autostart << AEOF
-# SalamOS Openbox Autostart
-# ============================
+# SalamOS Openbox Autostart - 2026 Modern Edition
+# ============================================
 
-# Set wallpaper
+# Set wallpaper (first - so desktop looks great immediately)
 nitrogen --restore &
 
-# Start panel
-tint2 &
-
-# Start composite manager for smooth effects
+# Start picom compositor (blur + shadows + rounded corners)
 picom --config /etc/picom.conf -b &
 
-# Start application menu daemon
-jgmenu --at-pointer --config-file=/etc/jgmenu/jgmenu.conf &
+# Start tint2 panel (modern Windows 11-style taskbar)
+tint2 &
 
-# Network Manager applet
+# Start notification daemon (modern dunst with glassmorphism)
+dunst &
+
+# Network Manager applet (WiFi icon in tray)
 nm-applet &
 
-# Volume control
+# Volume control (speaker icon in tray)
 volumeicon-alsa &
 
-# Power manager
-xfce4-power-manager &
-
-# Clipboard manager (optional, very light)
-# clipit &
-
-# Conky system monitor
-conky -c /etc/conky/conky.conf &
+# Conky system monitor (top-right elegant display)
+(sleep 3 && conky -c /etc/conky/conky.conf) &
 
 AEOF
 
-# Create Openbox menu (XML)
+# === Openbox menu (XML) - Modern categorized like Windows Start Menu ===
 cat > /etc/xdg/openbox/menu.xml << MEOF
 <?xml version="1.0" encoding="UTF-8"?>
 <openbox_menu xmlns="http://openbox.org/3.4/menu">
   <menu id="root-menu" label="SalamOS">
-    <menu id="applications" label="Applications">
-      <menu id="internet" label="Internet">
-        <item label="Firefox">
-          <action name="Execute"><command>firefox-esr</command></action>
-        </item>
-      </menu>
-      <menu id="utilities" label="Utilities">
-        <item label="File Manager">
-          <action name="Execute"><command>pcmanfm</command></action>
-        </item>
-        <item label="Terminal">
-          <action name="Execute"><command>lxterminal</command></action>
-        </item>
-        <item label="Text Editor">
-          <action name="Execute"><command>mousepad</command></action>
-        </item>
-        <item label="System Monitor">
-          <action name="Execute"><command>htop</command></action>
-        </item>
-        <item label="Partition Manager">
-          <action name="Execute"><command>gparted</command></action>
-        </item>
-        <item label="Screenshot">
-          <action name="Execute"><command>scrot -d 3</command></action>
-        </item>
-      </menu>
-      <menu id="settings" label="Settings">
-        <item label="Openbox Configuration">
-          <action name="Execute"><command>obconf</command></action>
-        </item>
-        <item label="Appearance">
-          <action name="Execute"><command>lxappearance</command></action>
-        </item>
-        <item label="Wallpaper">
-          <action name="Execute"><command>nitrogen /usr/share/backgrounds/salamos</command></action>
-        </item>
-        <item label="Network">
-          <action name="Execute"><command>nm-connection-editor</command></action>
-        </item>
-        <item label="Audio">
-          <action name="Execute"><command>pavucontrol-qt</command></action>
-        </item>
-        <item label="Rofi Launcher">
-          <action name="Execute"><command>rofi -show run</command></action>
-        </item>
-        <item label="Reconfigure Openbox">
-          <action name="Reconfigure"/>
-        </item>
-      </menu>
+    <separator label="SalamOS 2026.1"/>
+    <menu id="internet" label="Internet">
+      <item label="Firefox">
+        <action name="Execute"><command>firefox-esr</command></action>
+      </item>
+    </menu>
+    <menu id="utilities" label="Utilities">
+      <item label="Files">
+        <action name="Execute"><command>pcmanfm</command></action>
+      </item>
+      <item label="Terminal">
+        <action name="Execute"><command>lxterminal</command></action>
+      </item>
+      <item label="Text Editor">
+        <action name="Execute"><command>mousepad</command></action>
+      </item>
+      <item label="Screenshot">
+        <action name="Execute"><command>scrot -d 3</command></action>
+      </item>
+    </menu>
+    <menu id="system" label="System">
+      <item label="Install SalamOS">
+        <action name="Execute"><command>sudo calamares</command></action>
+      </item>
+      <item label="Software Center">
+        <action name="Execute"><command>salamos-software-center gui</command></action>
+      </item>
+      <item label="Package Manager">
+        <action name="Execute"><command>synaptic</command></action>
+      </item>
+      <item label="System Monitor">
+        <action name="Execute"><command>htop</command></action>
+      </item>
+      <item label="Partition Manager">
+        <action name="Execute"><command>gparted</command></action>
+      </item>
+    </menu>
+    <menu id="settings" label="Settings">
+      <item label="Appearance">
+        <action name="Execute"><command>lxappearance</command></action>
+      </item>
+      <item label="Openbox Config">
+        <action name="Execute"><command>obconf</command></action>
+      </item>
+      <item label="Wallpaper">
+        <action name="Execute"><command>nitrogen /usr/share/backgrounds/salamos</command></action>
+      </item>
+      <item label="Network">
+        <action name="Execute"><command>nm-connection-editor</command></action>
+      </item>
+      <item label="App Launcher">
+        <action name="Execute"><command>rofi -show drun</command></action>
+      </item>
+      <item label="Reconfigure Openbox">
+        <action name="Reconfigure"/>
+      </item>
     </menu>
     <separator/>
     <item label="Lock Screen">
@@ -121,7 +123,7 @@ cat > /etc/xdg/openbox/menu.xml << MEOF
 </openbox_menu>
 MEOF
 
-# Create Openbox rc.xml (window manager configuration)
+# === Openbox rc.xml - Modern 2026 configuration ===
 cat > /etc/xdg/openbox/rc.xml << REOF
 <?xml version="1.0" encoding="UTF-8"?>
 <openbox_config xmlns="http://openbox.org/3.4/rc" version="1">
@@ -149,13 +151,13 @@ cat > /etc/xdg/openbox/rc.xml << REOF
     <keepBorder>yes</keepBorder>
     <animateIconify>yes</animateIconify>
     <font place="ActiveWindow">
-      <name>Hack</name>
+      <name>Noto Sans</name>
       <size>10</size>
       <weight>Bold</weight>
       <slant>Normal</slant>
     </font>
     <font place="InactiveWindow">
-      <name>Hack</name>
+      <name>Noto Sans</name>
       <size>10</size>
       <weight>Normal</weight>
       <slant>Normal</slant>
@@ -185,27 +187,35 @@ cat > /etc/xdg/openbox/rc.xml << REOF
   </margins>
   
   <keyboard>
+    <!-- Super+A: Open jgmenu (Start Menu like Windows) -->
     <keybind key="Super-a">
-      <action name="ShowMenu"><menu>root-menu</menu></action>
+      <action name="Execute"><command>jgmenu --at-pointer --config-file=/etc/jgmenu/jgmenu.conf</command></action>
     </keybind>
+    <!-- Super+R: Open rofi launcher (like Windows Search) -->
     <keybind key="Super-r">
-      <action name="Execute"><command>rofi -show run</command></action>
+      <action name="Execute"><command>rofi -show drun</command></action>
     </keybind>
+    <!-- Super+T: Open terminal -->
     <keybind key="Super-t">
       <action name="Execute"><command>lxterminal</command></action>
     </keybind>
+    <!-- Super+F: Open file manager -->
     <keybind key="Super-f">
       <action name="Execute"><command>pcmanfm</command></action>
     </keybind>
+    <!-- Super+W: Open web browser -->
     <keybind key="Super-w">
       <action name="Execute"><command>firefox-esr</command></action>
     </keybind>
+    <!-- Super+E: Open text editor -->
     <keybind key="Super-e">
       <action name="Execute"><command>mousepad</command></action>
     </keybind>
+    <!-- Super+L: Lock screen -->
     <keybind key="Super-l">
       <action name="Execute"><command>lightlock-command -l</command></action>
     </keybind>
+    <!-- Super+Left/Right/Up/Down: Move window to edge -->
     <keybind key="Super-Left">
       <action name="MoveToEdge"><direction>left</direction></action>
     </keybind>
@@ -218,15 +228,19 @@ cat > /etc/xdg/openbox/rc.xml << REOF
     <keybind key="Super-Down">
       <action name="MoveToEdge"><direction>bottom</direction></action>
     </keybind>
+    <!-- Alt+F4: Close window -->
     <keybind key="Alt-F4">
       <action name="Close"/>
     </keybind>
+    <!-- Alt+Tab: Switch windows -->
     <keybind key="Alt-Tab">
       <action name="NextWindow"><allDesktops>no</allDesktops><raise>yes</raise></action>
     </keybind>
+    <!-- Alt+Space: Window menu -->
     <keybind key="Alt-space">
       <action name="ShowMenu"><menu>client-menu</menu></action>
     </keybind>
+    <!-- Ctrl+Alt+Left/Right: Switch desktop -->
     <keybind key="C-A-Left">
       <action name="DesktopLeft"><wrap>yes</wrap></action>
     </keybind>
@@ -240,14 +254,17 @@ cat > /etc/xdg/openbox/rc.xml << REOF
     <doubleClickTime>200</doubleClickTime>
     <screenEdgeWarpTime>400</screenEdgeWarpTime>
     <context name="Root">
+      <!-- Right-click on desktop: Show jgmenu (Start Menu) -->
       <mousebind button="Right" action="Press">
-        <action name="ShowMenu"><menu>root-menu</menu></action>
+        <action name="Execute"><command>jgmenu --at-pointer --config-file=/etc/jgmenu/jgmenu.conf</command></action>
       </mousebind>
+      <!-- Middle-click on desktop: Show desktop -->
       <mousebind button="Middle" action="Press">
         <action name="ShowDesktop"/>
       </mousebind>
+      <!-- Left-click on desktop: Open rofi launcher -->
       <mousebind button="Left" action="Press">
-        <action name="ShowMenu"><menu>client-list-combined-menu</menu></action>
+        <action name="Execute"><command>rofi -show drun</command></action>
       </mousebind>
     </context>
   </mouse>
@@ -260,4 +277,4 @@ chown -R $DEFAULT_USER:$DEFAULT_USER /home/$DEFAULT_USER/.config/openbox/
 
 CHEOF
 
-echo "[05-desktop] Desktop environment configured successfully"
+echo "[05-desktop] Desktop environment configured - 2026 Modern Edition"

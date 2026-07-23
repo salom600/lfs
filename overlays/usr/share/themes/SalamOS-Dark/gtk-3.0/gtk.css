@@ -1,29 +1,39 @@
-/* SalamOS-Dark GTK3 Theme - Modern Professional Design */
-/* Inspired by Windows 11 Fluent Design + SalamOS identity */
+/* SalamOS-Dark GTK3 Theme - 2026 Modern Professional Edition */
+/* Glassmorphism + Fluent Design + Vibrant Violet/Magenta accents */
+/* Color palette inspired by Nexora OS reference */
 
-@define-color bg_color #1b1b2f;
-@define-color fg_color #e8e8e8;
-@define-color base_color #162447;
-@define-color text_color #e8e8e8;
-@define-color selected_bg_color #1f4068;
+@define-color bg_color #0d1123;
+@define-color fg_color #dce6ff;
+@define-color base_color #16213e;
+@define-color text_color #dce6ff;
+@define-color selected_bg_color #7c3aed;
 @define-color selected_fg_color #ffffff;
-@define-color accent_color #e43f5a;
-@define-color headerbar_color #1b1b2f;
-@define-color menu_color #1b1b2f;
-@define-color tooltip_color #162447;
-@define-color border_color #1f4068;
-@define-color card_color #162447;
-@define-color hover_color #1f4068;
-@define-color disabled_color #5c5c6e;
+@define-color accent_color #e94560;
+@define-color accent_secondary #648cdc;
+@define-color headerbar_color #0d1123;
+@define-color menu_color #0d1123;
+@define-color tooltip_color #16213e;
+@define-color border_color #2d468c;
+@define-color card_color #16213e;
+@define-color hover_color #2d468c;
+@define-color disabled_color #3a3a4e;
+@define-color violet #7c3aed;
+@define-color deep_blue #0f3460;
+@define-color royal_blue #2d468c;
+@define-color light_blue #648cdc;
+@define-color soft_pink #c8508c;
+@define-color coral #e94560;
 
-/* Global reset - clean flat design */
+/* ============================================
+   Global Reset - Clean Flat Design
+   ============================================ */
 * {
     background-color: @bg_color;
     color: @fg_color;
     border-color: transparent;
     font-family: 'Noto Sans', 'DejaVu Sans', sans-serif;
     font-size: 10pt;
-    outline-color: @accent_color;
+    outline-color: @violet;
     outline-style: solid;
     outline-width: 0;
 }
@@ -32,25 +42,29 @@
     outline-width: 0;
 }
 
-/* Window frame */
+/* ============================================
+   Window Frame - Modern rounded
+   ============================================ */
 window {
     background-color: @bg_color;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
 window decoration {
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-/* Header Bar - Modern slim design */
+/* ============================================
+   Header Bar - Modern slim, violet accent line
+   ============================================ */
 headerbar {
     background-color: @headerbar_color;
     color: @fg_color;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    padding: 6px 12px;
-    min-height: 36px;
-    border-radius: 8px 8px 0 0;
+    border-bottom: 2px solid @violet;
+    padding: 6px 14px;
+    min-height: 38px;
+    border-radius: 10px 10px 0 0;
 }
 
 headerbar .title {
@@ -62,62 +76,83 @@ headerbar .title {
 headerbar button {
     background-color: transparent;
     border: none;
-    border-radius: 4px;
-    padding: 4px 8px;
-    min-height: 24px;
+    border-radius: 6px;
+    padding: 4px 10px;
+    min-height: 26px;
+    transition: background-color 150ms ease;
 }
 
 headerbar button:hover {
     background-color: @hover_color;
 }
 
-/* Buttons - Pill-shaped, modern */
+headerbar button:active {
+    background-color: @violet;
+    color: @selected_fg_color;
+}
+
+/* ============================================
+   Buttons - Modern pill-shaped with violet accent
+   ============================================ */
 button {
     background-color: @card_color;
     color: @fg_color;
     border: none;
-    border-radius: 6px;
-    padding: 6px 16px;
-    min-height: 28px;
+    border-radius: 8px;
+    padding: 8px 20px;
+    min-height: 30px;
     transition: all 150ms ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 button:hover {
     background-color: @hover_color;
     color: @selected_fg_color;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
 }
 
 button:active, button:checked {
-    background-color: @accent_color;
+    background-color: @violet;
     color: @selected_fg_color;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 button.suggested-action {
     background-color: @accent_color;
     color: @selected_fg_color;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 button.suggested-action:hover {
-    background-color: #c73550;
+    background-color: @soft_pink;
 }
 
-/* Entry / Input fields - Modern rounded */
+button.destructive-action {
+    background-color: @coral;
+    color: @selected_fg_color;
+}
+
+/* ============================================
+   Entry / Input fields - Modern rounded with violet focus
+   ============================================ */
 entry, spinbutton {
     background-color: @card_color;
     color: @text_color;
-    border: 2px solid transparent;
-    border-radius: 6px;
-    padding: 6px 10px;
-    min-height: 28px;
+    border: 2px solid @border_color;
+    border-radius: 8px;
+    padding: 8px 12px;
+    min-height: 30px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 entry:focus, spinbutton:focus {
-    border-color: @accent_color;
-    box-shadow: 0 0 0 1px @accent_color;
+    border-color: @violet;
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.3);
 }
 
-/* Notebook / Tabs - Modern pill tabs */
+/* ============================================
+   Notebook / Tabs - Modern pill tabs with violet
+   ============================================ */
 notebook {
     background-color: @bg_color;
     border: none;
@@ -125,34 +160,37 @@ notebook {
 
 notebook header {
     background-color: @bg_color;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 notebook tab {
     background-color: transparent;
     color: @disabled_color;
-    padding: 8px 16px;
-    border-radius: 6px 6px 0 0;
+    padding: 8px 18px;
+    border-radius: 8px 8px 0 0;
 }
 
 notebook tab:checked {
     background-color: @card_color;
     color: @selected_fg_color;
+    border-bottom: 2px solid @violet;
 }
 
 notebook tab:hover {
     color: @fg_color;
 }
 
-/* Treeview / Lists */
+/* ============================================
+   Treeview / Lists - Modern card style
+   ============================================ */
 treeview {
     background-color: @card_color;
     color: @text_color;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 treeview:selected {
-    background-color: @selected_bg_color;
+    background-color: @violet;
     color: @selected_fg_color;
 }
 
@@ -162,87 +200,101 @@ treeview header {
     font-weight: bold;
 }
 
-/* Scrollbar - Slim modern */
+/* ============================================
+   Scrollbar - Slim modern, violet on hover
+   ============================================ */
 scrollbar {
     background-color: transparent;
     border: none;
 }
 
 scrollbar slider {
-    background-color: rgba(255,255,255,0.15);
-    border-radius: 4px;
-    min-width: 4px;
-    min-height: 4px;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    min-width: 5px;
+    min-height: 5px;
 }
 
 scrollbar slider:hover {
-    background-color: @accent_color;
+    background-color: @violet;
 }
 
-/* Menu - Modern popup */
+/* ============================================
+   Menu - Modern frosted glass popup
+   ============================================ */
 menu, .menu {
     background-color: @menu_color;
     color: @fg_color;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
-    padding: 6px;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
 menuitem, .menuitem {
     background-color: transparent;
     color: @fg_color;
-    padding: 6px 12px;
-    border-radius: 4px;
+    padding: 8px 14px;
+    border-radius: 6px;
     margin: 2px 0;
+    transition: background-color 100ms ease;
 }
 
 menuitem:hover, .menuitem:hover {
-    background-color: @hover_color;
+    background-color: @violet;
     color: @selected_fg_color;
 }
 
-/* Tooltip */
+/* ============================================
+   Tooltip - Frosted glass
+   ============================================ */
 tooltip {
     background-color: @card_color;
     color: @fg_color;
-    border: none;
-    border-radius: 6px;
-    padding: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
-/* Dialog - Modern card style */
+/* ============================================
+   Dialog - Modern card, rounded corners
+   ============================================ */
 dialog, .dialog {
     background-color: @bg_color;
     border: none;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    border-radius: 14px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
 }
 
-/* Scale / Slider - Modern round */
+/* ============================================
+   Scale / Slider - Modern violet accent
+   ============================================ */
 scale slider {
-    background-color: @accent_color;
+    background-color: @violet;
     border: none;
     border-radius: 50%;
-    min-width: 14px;
-    min-height: 14px;
+    min-width: 16px;
+    min-height: 16px;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
 }
 
 scale trough {
     background-color: @card_color;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
-/* Check / Radio - Modern */
+/* ============================================
+   Check / Radio - Modern violet
+   ============================================ */
 checkbutton check, radiobutton radio {
     background-color: @card_color;
     border: 2px solid @border_color;
     color: @fg_color;
-    border-radius: 3px;
-    min-width: 16px;
-    min-height: 16px;
+    border-radius: 4px;
+    min-width: 18px;
+    min-height: 18px;
 }
 
 radiobutton radio {
@@ -250,63 +302,71 @@ radiobutton radio {
 }
 
 checkbutton check:checked, radiobutton radio:checked {
-    background-color: @accent_color;
-    border-color: @accent_color;
+    background-color: @violet;
+    border-color: @violet;
     color: @selected_fg_color;
 }
 
-/* Switch - Modern toggle */
+/* ============================================
+   Switch - Modern toggle with violet on
+   ============================================ */
 switch {
     background-color: @card_color;
     border: none;
-    border-radius: 12px;
-    min-width: 40px;
-    min-height: 20px;
+    border-radius: 14px;
+    min-width: 42px;
+    min-height: 22px;
 }
 
 switch:checked {
-    background-color: @accent_color;
+    background-color: @violet;
 }
 
 switch slider {
     background-color: @fg_color;
     border: none;
-    border-radius: 10px;
-    min-width: 16px;
-    min-height: 16px;
+    border-radius: 12px;
+    min-width: 18px;
+    min-height: 18px;
 }
 
-/* Progress Bar - Modern rounded */
+/* ============================================
+   Progress Bar - Violet gradient
+   ============================================ */
 progressbar {
     background-color: @card_color;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 progressbar progress {
-    background-color: @accent_color;
-    border-radius: 4px;
+    background-color: @violet;
+    border-radius: 6px;
 }
 
-/* Status Bar */
+/* ============================================
+   Status Bar
+   ============================================ */
 statusbar {
     background-color: @bg_color;
     color: @disabled_color;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Calendar - Modern */
+/* ============================================
+   Calendar - Modern with violet highlights
+   ============================================ */
 calendar {
     background-color: @card_color;
     color: @text_color;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
 calendar:selected {
-    background-color: @accent_color;
+    background-color: @violet;
     color: @selected_fg_color;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 calendar.header {
@@ -315,39 +375,49 @@ calendar.header {
     font-weight: bold;
 }
 
-/* Separator */
+/* ============================================
+   Separator
+   ============================================ */
 separator {
-    background-color: rgba(255,255,255,0.06);
+    background-color: rgba(255, 255, 255, 0.06);
     min-height: 1px;
     min-width: 1px;
 }
 
-/* Link */
+/* ============================================
+   Link - Coral accent color
+   ============================================ */
 link {
     color: @accent_color;
 }
 
 link:hover {
-    color: #c73550;
+    color: @soft_pink;
 }
 
-/* Desktop icons style */
+/* ============================================
+   Desktop icons style - Modern white text with shadow
+   ============================================ */
 desktop-icon-item {
     color: #ffffff;
     font-size: 10pt;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
 }
 
-/* File manager specific (pcmanfm) */
+/* ============================================
+   File manager specific
+   ============================================ */
 NautilusWindow, CajaWindow {
     background-color: @bg_color;
 }
 
-/* List box rows */
+/* ============================================
+   List box rows
+   ============================================ */
 list row {
     background-color: transparent;
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding: 8px 14px;
+    border-radius: 6px;
 }
 
 list row:hover {
@@ -355,21 +425,23 @@ list row:hover {
 }
 
 list row:selected {
-    background-color: @selected_bg_color;
+    background-color: @violet;
     color: @selected_fg_color;
 }
 
-/* Stack sidebar */
+/* ============================================
+   Stack sidebar - Modern with violet accent
+   ============================================ */
 stacksidebar sidebar {
     background-color: @bg_color;
 }
 
 stacksidebar row {
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding: 10px 14px;
+    border-radius: 6px;
 }
 
 stacksidebar row:selected {
-    background-color: @selected_bg_color;
+    background-color: @violet;
     color: @selected_fg_color;
 }

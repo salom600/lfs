@@ -1,89 +1,121 @@
-# SalamOS-Dark Openbox Theme
-# Modern Professional Design - Rounded corners, fluent feel
+# SalamOS-Dark Openbox Theme - 2026 Modern Professional Edition
+# Glassmorphism + Rounded corners + Fluent Design colors
 # ============================================
 
-# Window geometry - modern feel
+# === Window geometry ===
 border.width: 2
-padding.width: 6
-padding.height: 4
+padding.width: 8
+padding.height: 6
 window.handle.width: 0
-window.client.padding.width: 0
-window.client.padding.height: 0
+window.client.padding.width: 2
+window.client.padding.height: 2
 
-# Colors
-window.active.border.color: #1f4068
-window.inactive.border.color: #162447
-window.active.client.color: #1b1b2f
-window.inactive.client.color: #1b1b2f
-window.active.handle.color: #1b1b2f
-window.inactive.handle.color: #1b1b2f
+# === NEW 2026 Color Palette ===
+# Deep navy background, vibrant violet accent, coral highlight
+window.active.border.color: #7c3aed
+window.inactive.border.color: #1f4068
+window.active.client.color: #0d1123
+window.inactive.client.color: #0d1123
+window.active.handle.color: #0d1123
+window.inactive.handle.color: #0d1123
 
-# Title bar - gradient modern
+# === Title bar - Modern gradient with violet glow ===
 window.active.title.bg: flat gradient vertical
-window.active.title.bg.color: #1b1b2f
-window.active.title.bg.colorTo: #162447
+window.active.title.bg.color: #0d1123
+window.active.title.bg.colorTo: #16213e
 
 window.inactive.title.bg: flat gradient vertical
-window.inactive.title.bg.color: #1b1b2f
-window.inactive.title.bg.colorTo: #12122a
+window.inactive.title.bg.color: #0d1123
+window.inactive.title.bg.colorTo: #0f1525
 
-# Title text
-window.active.label.text.color: #e8e8e8
+# === Title text - Clean modern font ===
+window.active.label.text.color: #dce6ff
 window.inactive.label.text.color: #5c5c6e
 window.label.text.justify: center
 
-# Buttons - modern circle feel
-window.active.button.unpressed.bg: flat solid
-window.active.button.unpressed.bg.color: #162447
-window.active.button.unpressed.image.color: #e8e8e8
+# === Buttons - Modern Windows 11 style (colored circles) ===
+# Close button: coral/magenta
+window.active.button.close.unpressed.bg: flat solid
+window.active.button.close.unpressed.bg.color: #0d1123
+window.active.button.close.unpressed.image.color: #e94560
 
-window.active.button.pressed.bg: flat solid
-window.active.button.pressed.bg.color: #e43f5a
-window.active.button.pressed.image.color: #ffffff
+window.active.button.close.pressed.bg: flat solid
+window.active.button.close.pressed.bg.color: #e94560
+window.active.button.close.pressed.image.color: #ffffff
 
-window.active.button.hover.bg: flat solid
-window.active.button.hover.bg.color: #e43f5a
-window.active.button.hover.image.color: #ffffff
+window.active.button.close.hover.bg: flat solid
+window.active.button.close.hover.bg.color: #2d468c
+window.active.button.close.hover.image.color: #e94560
 
+# Maximize button: violet
+window.active.button.max.unpressed.bg: flat solid
+window.active.button.max.unpressed.bg.color: #0d1123
+window.active.button.max.unpressed.image.color: #7c3aed
+
+window.active.button.max.pressed.bg: flat solid
+window.active.button.max.pressed.bg.color: #7c3aed
+window.active.button.max.pressed.image.color: #ffffff
+
+window.active.button.max.hover.bg: flat solid
+window.active.button.max.hover.bg.color: #2d468c
+window.active.button.max.hover.image.color: #7c3aed
+
+# Iconify button: light blue
+window.active.button.iconify.unpressed.bg: flat solid
+window.active.button.iconify.unpressed.bg.color: #0d1123
+window.active.button.iconify.unpressed.image.color: #648cdc
+
+window.active.button.iconify.pressed.bg: flat solid
+window.active.button.iconify.pressed.bg.color: #648cdc
+window.active.button.iconify.pressed.image.color: #ffffff
+
+window.active.button.iconify.hover.bg: flat solid
+window.active.button.iconify.hover.bg.color: #2d468c
+window.active.button.iconify.hover.image.color: #648cdc
+
+# Disabled buttons
 window.active.button.disabled.bg: flat solid
-window.active.button.disabled.bg.color: #162447
-window.active.button.disabled.image.color: #5c5c6e
+window.active.button.disabled.bg.color: #0d1123
+window.active.button.disabled.image.color: #3a3a4e
 
+# Inactive window buttons (dimmed)
 window.inactive.button.unpressed.bg: flat solid
-window.inactive.button.unpressed.bg.color: #162447
-window.inactive.button.unpressed.image.color: #5c5c6e
+window.inactive.button.unpressed.bg.color: #0f1525
+window.inactive.button.unpressed.image.color: #3a3a4e
 
 window.inactive.button.pressed.bg: flat solid
-window.inactive.button.pressed.bg.color: #12122a
-window.inactive.button.pressed.image.color: #5c5c6e
+window.inactive.button.pressed.bg.color: #0a0a18
+window.inactive.button.pressed.image.color: #3a3a4e
 
 window.inactive.button.hover.bg: flat solid
 window.inactive.button.hover.bg.color: #1f4068
-window.inactive.button.hover.image.color: #e8e8e8
+window.inactive.button.hover.image.color: #8c8c9a
 
-# Menu - modern rounded
+# === Menu - Modern frosted glass popup ===
 menu.overlap: 0
-menu.title.bg: flat solid
-menu.title.bg.color: #1b1b2f
-menu.title.text.color: #e8e8e8
+menu.title.bg: flat gradient vertical
+menu.title.bg.color: #0d1123
+menu.title.bg.colorTo: #16213e
+menu.title.text.color: #dce6ff
 menu.items.bg: flat solid
-menu.items.bg.color: #1b1b2f
-menu.items.text.color: #e8e8e8
+menu.items.bg.color: #0d1123
+menu.items.text.color: #dce6ff
 menu.items.active.bg: flat solid
-menu.items.active.bg.color: #1f4068
+menu.items.active.bg.color: #7c3aed
 menu.items.active.text.color: #ffffff
-menu.items.disabled.text.color: #5c5c6e
-menu.separator.color: rgba(255,255,255,0.06)
-menu.border.color: rgba(255,255,255,0.08)
+menu.items.disabled.text.color: #3a3a4e
+menu.separator.color: #ffffff 8
+menu.border.color: #7c3aed 20
 menu.border.width: 1
 
-# OSD - modern
-osd.bg: flat solid
-osd.bg.color: #1b1b2f
-osd.label.text.color: #e8e8e8
+# === OSD - Modern purple accent ===
+osd.bg: flat gradient vertical
+osd.bg.color: #0d1123
+osd.bg.colorTo: #16213e
+osd.label.text.color: #dce6ff
 osd.hilight.bg: flat solid
-osd.hilight.bg.color: #e43f5a
+osd.hilight.bg.color: #7c3aed
 osd.unhilight.bg: flat solid
-osd.unhilight.bg.color: #162447
-osd.border.color: rgba(255,255,255,0.08)
+osd.unhilight.bg.color: #16213e
+osd.border.color: #7c3aed 30
 osd.border.width: 1

@@ -1,10 +1,11 @@
 #!/bin/bash
-# SalamOS Customization - Apply branding and system customization inside chroot
+# SalamOS Customization - 2026 Modern Professional Edition
+# Apply branding and system customization inside chroot
 # ============================================
 set -e
 export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 
-# === OS Identity ===
+# === OS Identity - 2026 branding ===
 cat > /etc/os-release << 'OEOF'
 NAME="SalamOS"
 VERSION="2026.1 (Zen)"
@@ -46,7 +47,7 @@ alias clean='sudo apt-get autoremove --purge && sudo apt-get clean'
 BEOF
 chown salamos:salamos /home/salamos/.bashrc
 
-# === GRUB config ===
+# === GRUB config - Modern splash ===
 cat > /etc/default/grub << 'GEOF'
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=5

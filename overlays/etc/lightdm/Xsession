@@ -1,50 +1,55 @@
 #!/bin/bash
-# SalamOS Xsession - Modern Professional Desktop Startup
+# SalamOS Xsession - 2026 Modern Desktop Startup
+# Professional, sleek, and modern with glassmorphism effects
 # ============================================
 
-# Set environment
+# === Set environment variables ===
 export GTK_THEME=SalamOS-Dark:dark
 export XDG_CURRENT_DESKTOP=openbox
 export DESKTOP_SESSION=openbox
 export XCURSOR_THEME=Adwaita
 export XCURSOR_SIZE=24
 export SALAMOS=true
+export QT_QPA_PLATFORMTHEME=gtk3
 
-# Create XDG user directories (Documents, Pictures, Music, etc.)
+# === Create XDG user directories ===
 if command -v xdg-user-dirs-update &>/dev/null; then
     xdg-user-dirs-update || true
 else
     mkdir -p ~/Desktop ~/Documents ~/Downloads ~/Music ~/Pictures ~/Videos ~/Public ~/Templates 2>/dev/null || true
 fi
 
-# Set keyboard layout (Arabic + English toggle)
+# === Set keyboard layout (Arabic + English toggle) ===
 if command -v setxkbmap &>/dev/null; then
     setxkbmap -layout "us,ara" -option "grp:alt_shift_toggle" 2>/dev/null || true
 fi
 
-# Start tint2 panel (modern taskbar)
-tint2 &
-
-# Start notification daemon (modern dunst)
-dunst &
-
-# Start volume icon in tray
-volumeicon-alsa & 2>/dev/null || true
-
-# Start picom compositor (modern shadows + fading + rounded corners)
-if command -v picom &>/dev/null; then
-    picom --config /etc/picom.conf -b 2>/dev/null || true
-fi
-
-# Set wallpaper with nitrogen
+# === Set wallpaper FIRST (before any UI elements) ===
 if command -v nitrogen &>/dev/null; then
     nitrogen --restore 2>/dev/null || true
 fi
 
-# Start conky system monitor
-if command -v conky &>/dev/null; then
-    (sleep 3 && conky -c /etc/conky/conky.conf) & 2>/dev/null || true
+# === Start picom compositor (blur + shadows + rounded corners) ===
+if command -v picom &>/dev/null; then
+    picom --config /etc/picom.conf -b 2>/dev/null || true
 fi
 
-# Start Openbox session (MUST be last - replaces this shell)
+# === Start tint2 panel (modern Windows 11-style taskbar) ===
+tint2 &
+
+# === Start notification daemon (modern dunst) ===
+dunst &
+
+# === Start volume icon in tray ===
+volumeicon-alsa & 2>/dev/null || true
+
+# === Start Network Manager applet ===
+nm-applet & 2>/dev/null || true
+
+# === Start conky system monitor (delayed to avoid race) ===
+if command -v conky &>/dev/null; then
+    (sleep 4 && conky -c /etc/conky/conky.conf) & 2>/dev/null || true
+fi
+
+# === Start Openbox session (MUST be last - replaces this shell) ===
 exec openbox-session

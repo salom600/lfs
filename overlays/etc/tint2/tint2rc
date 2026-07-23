@@ -1,111 +1,146 @@
-# SalamOS tint2 Panel - Modern Taskbar Design
-# Windows 11 inspired with SalamOS identity
+# SalamOS tint2 Panel - 2026 Modern Windows 11-style Taskbar
+# Glassmorphism + Centered Icons + System Tray
 # ============================================
 
-# Backgrounds - Modern glass effect
-# Background 1: Panel background (dark glass)
+# ==========================================
+# Backgrounds - Frosted Glass / Glassmorphism
+# ==========================================
+
+# Background 1: Main Panel (frosted glass effect)
+rounded = 12
+border_width = 1
+background_color = #0d1123 85
+border_color = #ffffff 8
+
+# Background 2: Task/Button area (subtle glass)
 rounded = 8
 border_width = 0
-background_color = #1b1b2f 90
-border_color = #1f4068 80
+background_color = #16213e 70
+border_color = #ffffff 5
 
-# Background 2: Task/app background
-rounded = 6
+# Background 3: Active/Selected task (violet glow)
+rounded = 8
+border_width = 1
+background_color = #7c3aed 90
+border_color = #7c3aed 100
+
+# Background 4: Hover (soft blue)
+rounded = 8
 border_width = 0
-background_color = #162447 80
-border_color = #1f4068 80
+background_color = #2d468c 60
+border_color = #ffffff 10
 
-# Background 3: Active task (highlighted)
-rounded = 6
+# Background 5: Launcher icon area
+rounded = 10
 border_width = 0
-background_color = #1f4068 95
-border_color = #e43f5a 100
+background_color = #16213e 40
+border_color = #ffffff 5
 
-# Background 4: Hover task
-rounded = 6
+# Background 6: Clock/Systray area
+rounded = 10
 border_width = 0
-background_color = #1f4068 50
-border_color = #e43f5a 50
+background_color = #0f3460 75
+border_color = #ffffff 5
 
-# Background 5: Launcher background
-rounded = 6
+# Background 7: Separator
+rounded = 0
 border_width = 0
-background_color = #162447 60
-border_color = #1f4068 60
+background_color = #ffffff 6
 
-# Panel - Center bottom, modern sizing
+# ==========================================
+# Panel - Bottom center, Windows 11 style
+# ==========================================
 panel_items = LSCB
 panel_position = bottom center horizontal
-panel_size = 98% 38
-panel_margin = 4 2
-panel_padding = 6 0 6
+panel_size = 96% 44
+panel_margin = 8 4
+panel_padding = 8 0 8
 panel_background_id = 1
 panel_shrink = 0
 panel_dock = 0
 panel_layer = top
 strut_policy = follow_size
 
-# Launcher - Modern app icons on left
-launcher_padding = 4 2 4
+# ==========================================
+# Launcher - Pinned apps (like Windows taskbar)
+# ==========================================
+launcher_padding = 6 2 6
 launcher_background_id = 5
 launcher_icon_theme = Papirus
-launcher_icon_size = 22
+launcher_icon_size = 26
+# Pinned launcher apps - most commonly used
+launcher_item_app = /usr/share/applications/jgmenu-salamos.desktop
 launcher_item_app = /usr/share/applications/firefox-esr.desktop
 launcher_item_app = /usr/share/applications/pcmanfm.desktop
 launcher_item_app = /usr/share/applications/lxterminal.desktop
+launcher_item_app = /usr/share/applications/salamos-software-center.desktop
 launcher_tooltip = 1
 
-# Taskbar - Modern task buttons
-taskbar_padding = 2 2 4
+# ==========================================
+# Taskbar - Running apps (like Windows taskbar buttons)
+# ==========================================
+taskbar_padding = 4 2 4
 taskbar_background_id = 2
 taskbar_active_background_id = 3
 taskbar_name = 1
-taskbar_name_padding = 8 2
-taskbar_name_font = sans 9
+taskbar_name_padding = 10 2
+taskbar_name_font = Noto Sans 9
 taskbar_name_active_font_color = #ffffff 100
 taskbar_name_font_color = #8c8c9a 100
-taskbar_name_urgent_font_color = #ffffff 100
+taskbar_name_urgent_font_color = #e94560 100
 
-# Systray - Right side system icons
-systray_padding = 6 0 6
-systray_background_id = 2
+# ==========================================
+# System Tray - Right side (WiFi, Volume, Battery, Clock)
+# ==========================================
+systray_padding = 8 0 8
+systray_background_id = 6
 systray_sort = right
-systray_icon_size = 18
-systray_icon_ascent = 6
+systray_icon_size = 20
+systray_icon_ascent = 8
 
-# Clock - Modern time display
+# ==========================================
+# Clock - Modern time display (right side)
+# ==========================================
 time1_format = %H:%M
-time1_font = sans bold 10
-time2_format = %a %d
-time2_font = sans 8
-clock_font_color = #e8e8e8 100
-clock_padding = 10 4
-clock_background_id = 2
-clock_lclick_command = lxterminal -e calcurse
+time1_font = Noto Sans Bold 11
+time2_format = %a %d %b
+time2_font = Noto Sans 8
+clock_font_color = #dce6ff 100
+clock_padding = 12 4
+clock_background_id = 6
+clock_lclick_command = /usr/bin/lxterminal -e /usr/bin/calcurse
 clock_rclick_command = none
 
-# Battery
-battery_padding = 6 0 6
-battery_background_id = 2
+# ==========================================
+# Battery (if available)
+# ==========================================
+battery_padding = 8 0 8
+battery_background_id = 6
 battery_center = true
-battery_font = sans 9
-battery_font_color = #e8e8e8 100
+battery_font = Noto Sans 9
+battery_font_color = #dce6ff 100
 
-# Separator
-separator_padding = 1 0 2
-separator_background_id = 0
-separator_color = rgba(255,255,255,0.06) 100
+# ==========================================
+# Separator (between launcher and taskbar)
+# ==========================================
+separator_padding = 4 0 4
+separator_background_id = 7
+separator_color = #ffffff 10
 
+# ==========================================
 # Mouse actions
+# ==========================================
 mouse_middle = none
 mouse_right = close
 mouse_scroll_up = toggle
 mouse_scroll_down = iconify
 
-# Tooltips
-tooltip_padding = 6 6
+# ==========================================
+# Tooltips - Modern frosted glass style
+# ==========================================
+tooltip_padding = 8 8
 tooltip_background_id = 2
-tooltip_font_color = #e8e8e8 100
-tooltip_font = sans 9
-tooltip_show_timeout = 0.3
-tooltip_hide_timeout = 0.3
+tooltip_font_color = #dce6ff 100
+tooltip_font = Noto Sans 9
+tooltip_show_timeout = 0.2
+tooltip_hide_timeout = 0.2
