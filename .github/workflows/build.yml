@@ -182,9 +182,9 @@ jobs:
           ESP_SIZE=8  # 8MB for EFI boot files + GRUB modules
           ESP_IMG="build/iso/esp.img"  # Must be INSIDE the ISO directory for xorriso -e
 
-          # Create FAT12 image
-          dd if=/dev/zero of="$ESP_IMG" bs=1M count=$ESP_SIZE
-          mkfs.vfat -F 12 "$ESP_IMG"
+          # Create FAT12 image (build/iso owned by root from previous sudo steps)
+          sudo dd if=/dev/zero of="$ESP_IMG" bs=1M count=$ESP_SIZE
+          sudo mkfs.vfat -F 12 "$ESP_IMG"
 
           # Mount ESP image and populate it
           sudo mkdir -p /mnt/esp
