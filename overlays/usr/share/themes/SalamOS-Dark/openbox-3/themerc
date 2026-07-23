@@ -1,80 +1,89 @@
 # SalamOS-Dark Openbox Theme
-# Professional dark theme matching GTK theme
+# Modern Professional Design - Rounded corners, fluent feel
 # ============================================
 
-# Window geometry
-border.width: 1
-padding.width: 4
+# Window geometry - modern feel
+border.width: 2
+padding.width: 6
 padding.height: 4
-window.handle.width: 2
+window.handle.width: 0
+window.client.padding.width: 0
+window.client.padding.height: 0
 
 # Colors
-window.active.border.color: #e94560
-window.inactive.border.color: #0f3460
-window.active.client.color: #e94560
-window.inactive.client.color: #0f3460
-window.active.handle.color: #0f3460
-window.inactive.handle.color: #16213e
+window.active.border.color: #1f4068
+window.inactive.border.color: #162447
+window.active.client.color: #1b1b2f
+window.inactive.client.color: #1b1b2f
+window.active.handle.color: #1b1b2f
+window.inactive.handle.color: #1b1b2f
 
-# Title bar
-window.active.title.bg: flat solid
-window.active.title.bg.color: #0f3460
-window.inactive.title.bg: flat solid
-window.inactive.title.bg.color: #16213e
+# Title bar - gradient modern
+window.active.title.bg: flat gradient vertical
+window.active.title.bg.color: #1b1b2f
+window.active.title.bg.colorTo: #162447
+
+window.inactive.title.bg: flat gradient vertical
+window.inactive.title.bg.color: #1b1b2f
+window.inactive.title.bg.colorTo: #12122a
 
 # Title text
-window.active.label.text.color: #ffffff
-window.inactive.label.text.color: #808090
-window.label.text.justify: left
+window.active.label.text.color: #e8e8e8
+window.inactive.label.text.color: #5c5c6e
+window.label.text.justify: center
 
-# Buttons
+# Buttons - modern circle feel
 window.active.button.unpressed.bg: flat solid
-window.active.button.unpressed.bg.color: #0f3460
-window.active.button.unpressed.image.color: #ffffff
+window.active.button.unpressed.bg.color: #162447
+window.active.button.unpressed.image.color: #e8e8e8
 
 window.active.button.pressed.bg: flat solid
-window.active.button.pressed.bg.color: #e94560
+window.active.button.pressed.bg.color: #e43f5a
 window.active.button.pressed.image.color: #ffffff
 
 window.active.button.hover.bg: flat solid
-window.active.button.hover.bg.color: #1a1a2e
-window.active.button.hover.image.color: #e94560
+window.active.button.hover.bg.color: #e43f5a
+window.active.button.hover.image.color: #ffffff
+
+window.active.button.disabled.bg: flat solid
+window.active.button.disabled.bg.color: #162447
+window.active.button.disabled.image.color: #5c5c6e
 
 window.inactive.button.unpressed.bg: flat solid
-window.inactive.button.unpressed.bg.color: #16213e
-window.inactive.button.unpressed.image.color: #808090
+window.inactive.button.unpressed.bg.color: #162447
+window.inactive.button.unpressed.image.color: #5c5c6e
 
 window.inactive.button.pressed.bg: flat solid
-window.inactive.button.pressed.bg.color: #1a1a2e
-window.inactive.button.pressed.image.color: #808090
+window.inactive.button.pressed.bg.color: #12122a
+window.inactive.button.pressed.image.color: #5c5c6e
 
 window.inactive.button.hover.bg: flat solid
-window.inactive.button.hover.bg.color: #0f3460
-window.inactive.button.hover.image.color: #e0e0e0
+window.inactive.button.hover.bg.color: #1f4068
+window.inactive.button.hover.image.color: #e8e8e8
 
-# Menu
+# Menu - modern rounded
 menu.overlap: 0
 menu.title.bg: flat solid
-menu.title.bg.color: #0f3460
-menu.title.text.color: #ffffff
+menu.title.bg.color: #1b1b2f
+menu.title.text.color: #e8e8e8
 menu.items.bg: flat solid
-menu.items.bg.color: #1a1a2e
-menu.items.text.color: #e0e0e0
+menu.items.bg.color: #1b1b2f
+menu.items.text.color: #e8e8e8
 menu.items.active.bg: flat solid
-menu.items.active.bg.color: #0f3460
+menu.items.active.bg.color: #1f4068
 menu.items.active.text.color: #ffffff
-menu.items.disabled.text.color: #808090
-menu.separator.color: #0f3460
-menu.border.color: #0f3460
+menu.items.disabled.text.color: #5c5c6e
+menu.separator.color: rgba(255,255,255,0.06)
+menu.border.color: rgba(255,255,255,0.08)
 menu.border.width: 1
 
-# OSD
+# OSD - modern
 osd.bg: flat solid
-osd.bg.color: #1a1a2e
-osd.label.text.color: #e0e0e0
+osd.bg.color: #1b1b2f
+osd.label.text.color: #e8e8e8
 osd.hilight.bg: flat solid
-osd.hilight.bg.color: #e94560
+osd.hilight.bg.color: #e43f5a
 osd.unhilight.bg: flat solid
-osd.unhilight.bg.color: #16213e
-osd.border.color: #0f3460
+osd.unhilight.bg.color: #162447
+osd.border.color: rgba(255,255,255,0.08)
 osd.border.width: 1

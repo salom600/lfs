@@ -1,40 +1,39 @@
 #!/bin/bash
-# SalamOS Xsession wrapper - starts Openbox desktop environment
+# SalamOS Xsession - Modern Professional Desktop Startup
 # ============================================
 
-# Set GTK theme
+# Set environment
 export GTK_THEME=SalamOS-Dark:dark
-
-# Set desktop environment identifier
 export XDG_CURRENT_DESKTOP=openbox
 export DESKTOP_SESSION=openbox
-
-# Set cursor theme
 export XCURSOR_THEME=Adwaita
 export XCURSOR_SIZE=24
+export SALAMOS=true
+
+# Create XDG user directories (Documents, Pictures, Music, etc.)
+if command -v xdg-user-dirs-update &>/dev/null; then
+    xdg-user-dirs-update || true
+else
+    mkdir -p ~/Desktop ~/Documents ~/Downloads ~/Music ~/Pictures ~/Videos ~/Public ~/Templates 2>/dev/null || true
+fi
 
 # Set keyboard layout (Arabic + English toggle)
 if command -v setxkbmap &>/dev/null; then
     setxkbmap -layout "us,ara" -option "grp:alt_shift_toggle" 2>/dev/null || true
 fi
 
-# Start tint2 panel in background
+# Start tint2 panel (modern taskbar)
 tint2 &
 
-# Start notification daemon
+# Start notification daemon (modern dunst)
 dunst &
 
-# Start volume icon
+# Start volume icon in tray
 volumeicon-alsa & 2>/dev/null || true
 
-# Start picom compositor (shadows + fading)
+# Start picom compositor (modern shadows + fading + rounded corners)
 if command -v picom &>/dev/null; then
     picom --config /etc/picom.conf -b 2>/dev/null || true
-fi
-
-# Start conky system monitor
-if command -v conky &>/dev/null; then
-    conky -c /etc/conky/conky.conf & 2>/dev/null || true
 fi
 
 # Set wallpaper with nitrogen
@@ -42,5 +41,10 @@ if command -v nitrogen &>/dev/null; then
     nitrogen --restore 2>/dev/null || true
 fi
 
-# Start Openbox session (this must be last - it replaces this shell)
+# Start conky system monitor
+if command -v conky &>/dev/null; then
+    (sleep 3 && conky -c /etc/conky/conky.conf) & 2>/dev/null || true
+fi
+
+# Start Openbox session (MUST be last - replaces this shell)
 exec openbox-session

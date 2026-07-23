@@ -1,58 +1,89 @@
-/* SalamOS-Dark GTK 3 Theme */
-/* Professional dark theme with blue/red accents */
+/* SalamOS-Dark GTK3 Theme - Modern Professional Design */
+/* Inspired by Windows 11 Fluent Design + SalamOS identity */
 
-@define-color bg_color #1a1a2e;
-@define-color fg_color #e0e0e0;
-@define-color base_color #16213e;
-@define-color text_color #e0e0e0;
-@define-color selected_bg_color #0f3460;
+@define-color bg_color #1b1b2f;
+@define-color fg_color #e8e8e8;
+@define-color base_color #162447;
+@define-color text_color #e8e8e8;
+@define-color selected_bg_color #1f4068;
 @define-color selected_fg_color #ffffff;
-@define-color accent_color #e94560;
-@define-color headerbar_color #0f3460;
-@define-color menu_color #1a1a2e;
-@define-color tooltip_color #16213e;
-@define-color border_color #0f3460;
-@define-color shadow_color rgba(0,0,0,0.3);
+@define-color accent_color #e43f5a;
+@define-color headerbar_color #1b1b2f;
+@define-color menu_color #1b1b2f;
+@define-color tooltip_color #162447;
+@define-color border_color #1f4068;
+@define-color card_color #162447;
+@define-color hover_color #1f4068;
+@define-color disabled_color #5c5c6e;
 
-/* General */
+/* Global reset - clean flat design */
 * {
     background-color: @bg_color;
     color: @fg_color;
-    border-color: @border_color;
-    font-family: 'Hack', 'DejaVu Sans', sans-serif;
+    border-color: transparent;
+    font-family: 'Noto Sans', 'DejaVu Sans', sans-serif;
     font-size: 10pt;
+    outline-color: @accent_color;
+    outline-style: solid;
+    outline-width: 0;
 }
 
-/* Window */
-.window {
+*:hover {
+    outline-width: 0;
+}
+
+/* Window frame */
+window {
     background-color: @bg_color;
-    border: 1px solid @border_color;
+    border-radius: 8px;
 }
 
-/* Header Bar */
+window decoration {
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+/* Header Bar - Modern slim design */
 headerbar {
     background-color: @headerbar_color;
     color: @fg_color;
-    border-bottom: 1px solid @border_color;
-    padding: 4px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 6px 12px;
+    min-height: 36px;
+    border-radius: 8px 8px 0 0;
 }
 
 headerbar .title {
     color: @fg_color;
     font-weight: bold;
+    font-size: 11pt;
 }
 
-/* Button */
+headerbar button {
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    min-height: 24px;
+}
+
+headerbar button:hover {
+    background-color: @hover_color;
+}
+
+/* Buttons - Pill-shaped, modern */
 button {
-    background-color: @base_color;
+    background-color: @card_color;
     color: @fg_color;
-    border: 1px solid @border_color;
-    border-radius: 3px;
-    padding: 4px 12px;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 16px;
+    min-height: 28px;
+    transition: all 150ms ease;
 }
 
 button:hover {
-    background-color: @selected_bg_color;
+    background-color: @hover_color;
     color: @selected_fg_color;
 }
 
@@ -64,47 +95,60 @@ button:active, button:checked {
 button.suggested-action {
     background-color: @accent_color;
     color: @selected_fg_color;
+    border-radius: 6px;
 }
 
-/* Entry / Text Input */
+button.suggested-action:hover {
+    background-color: #c73550;
+}
+
+/* Entry / Input fields - Modern rounded */
 entry, spinbutton {
-    background-color: @base_color;
+    background-color: @card_color;
     color: @text_color;
-    border: 1px solid @border_color;
-    border-radius: 3px;
-    padding: 4px;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    padding: 6px 10px;
+    min-height: 28px;
 }
 
 entry:focus, spinbutton:focus {
     border-color: @accent_color;
+    box-shadow: 0 0 0 1px @accent_color;
 }
 
-/* Notebook / Tabs */
+/* Notebook / Tabs - Modern pill tabs */
 notebook {
     background-color: @bg_color;
-    border: 1px solid @border_color;
+    border: none;
 }
 
 notebook header {
-    background-color: @headerbar_color;
-    border-bottom: 1px solid @border_color;
+    background-color: @bg_color;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
 notebook tab {
-    background-color: @base_color;
-    color: @fg_color;
-    padding: 4px 12px;
+    background-color: transparent;
+    color: @disabled_color;
+    padding: 8px 16px;
+    border-radius: 6px 6px 0 0;
 }
 
 notebook tab:checked {
-    background-color: @selected_bg_color;
+    background-color: @card_color;
     color: @selected_fg_color;
+}
+
+notebook tab:hover {
+    color: @fg_color;
 }
 
 /* Treeview / Lists */
 treeview {
-    background-color: @base_color;
+    background-color: @card_color;
     color: @text_color;
+    border-radius: 4px;
 }
 
 treeview:selected {
@@ -113,90 +157,111 @@ treeview:selected {
 }
 
 treeview header {
-    background-color: @headerbar_color;
+    background-color: @bg_color;
     color: @fg_color;
+    font-weight: bold;
 }
 
-/* Scrollbar */
+/* Scrollbar - Slim modern */
 scrollbar {
-    background-color: @base_color;
+    background-color: transparent;
     border: none;
 }
 
 scrollbar slider {
-    background-color: @border_color;
-    border-radius: 3px;
-    min-width: 6px;
+    background-color: rgba(255,255,255,0.15);
+    border-radius: 4px;
+    min-width: 4px;
+    min-height: 4px;
 }
 
 scrollbar slider:hover {
     background-color: @accent_color;
 }
 
-/* Menu */
+/* Menu - Modern popup */
 menu, .menu {
     background-color: @menu_color;
     color: @fg_color;
-    border: 1px solid @border_color;
-    padding: 4px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 6px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.5);
 }
 
 menuitem, .menuitem {
     background-color: transparent;
     color: @fg_color;
-    padding: 4px 8px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin: 2px 0;
 }
 
 menuitem:hover, .menuitem:hover {
-    background-color: @selected_bg_color;
+    background-color: @hover_color;
     color: @selected_fg_color;
 }
 
 /* Tooltip */
 tooltip {
-    background-color: @tooltip_color;
+    background-color: @card_color;
     color: @fg_color;
-    border: 1px solid @border_color;
-    border-radius: 3px;
-    padding: 4px;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
-/* Dialog */
+/* Dialog - Modern card style */
 dialog, .dialog {
     background-color: @bg_color;
-    border: 1px solid @border_color;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
 }
 
-/* Scale / Slider */
+/* Scale / Slider - Modern round */
 scale slider {
-    background-color: @selected_bg_color;
-    border: 1px solid @border_color;
+    background-color: @accent_color;
+    border: none;
     border-radius: 50%;
+    min-width: 14px;
+    min-height: 14px;
 }
 
 scale trough {
-    background-color: @base_color;
-    border: 1px solid @border_color;
-    border-radius: 3px;
+    background-color: @card_color;
+    border: none;
+    border-radius: 4px;
 }
 
-/* Check / Radio buttons */
+/* Check / Radio - Modern */
 checkbutton check, radiobutton radio {
-    background-color: @base_color;
-    border: 1px solid @border_color;
+    background-color: @card_color;
+    border: 2px solid @border_color;
     color: @fg_color;
+    border-radius: 3px;
+    min-width: 16px;
+    min-height: 16px;
+}
+
+radiobutton radio {
+    border-radius: 50%;
 }
 
 checkbutton check:checked, radiobutton radio:checked {
     background-color: @accent_color;
+    border-color: @accent_color;
     color: @selected_fg_color;
 }
 
-/* Switch */
+/* Switch - Modern toggle */
 switch {
-    background-color: @base_color;
-    border: 1px solid @border_color;
-    border-radius: 3px;
+    background-color: @card_color;
+    border: none;
+    border-radius: 12px;
+    min-width: 40px;
+    min-height: 20px;
 }
 
 switch:checked {
@@ -204,51 +269,107 @@ switch:checked {
 }
 
 switch slider {
-    background-color: @selected_bg_color;
-    border-radius: 3px;
+    background-color: @fg_color;
+    border: none;
+    border-radius: 10px;
+    min-width: 16px;
+    min-height: 16px;
 }
 
-/* Progress Bar */
+/* Progress Bar - Modern rounded */
 progressbar {
-    background-color: @base_color;
-    border: 1px solid @border_color;
-    border-radius: 3px;
+    background-color: @card_color;
+    border: none;
+    border-radius: 4px;
 }
 
 progressbar progress {
     background-color: @accent_color;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
 /* Status Bar */
 statusbar {
-    background-color: @headerbar_color;
-    color: @fg_color;
+    background-color: @bg_color;
+    color: @disabled_color;
+    border-top: 1px solid rgba(255,255,255,0.06);
 }
 
-/* Label */
-label {
+/* Calendar - Modern */
+calendar {
+    background-color: @card_color;
+    color: @text_color;
+    border: none;
+    border-radius: 8px;
+}
+
+calendar:selected {
+    background-color: @accent_color;
+    color: @selected_fg_color;
+    border-radius: 4px;
+}
+
+calendar.header {
+    background-color: transparent;
     color: @fg_color;
+    font-weight: bold;
 }
 
 /* Separator */
 separator {
-    background-color: @border_color;
+    background-color: rgba(255,255,255,0.06);
+    min-height: 1px;
+    min-width: 1px;
 }
 
-/* Calendar */
-calendar {
-    background-color: @base_color;
-    color: @text_color;
-    border: 1px solid @border_color;
+/* Link */
+link {
+    color: @accent_color;
 }
 
-calendar:selected {
+link:hover {
+    color: #c73550;
+}
+
+/* Desktop icons style */
+desktop-icon-item {
+    color: #ffffff;
+    font-size: 10pt;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+/* File manager specific (pcmanfm) */
+NautilusWindow, CajaWindow {
+    background-color: @bg_color;
+}
+
+/* List box rows */
+list row {
+    background-color: transparent;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+list row:hover {
+    background-color: @hover_color;
+}
+
+list row:selected {
     background-color: @selected_bg_color;
     color: @selected_fg_color;
 }
 
-calendar.header {
-    background-color: @headerbar_color;
-    color: @fg_color;
+/* Stack sidebar */
+stacksidebar sidebar {
+    background-color: @bg_color;
+}
+
+stacksidebar row {
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+stacksidebar row:selected {
+    background-color: @selected_bg_color;
+    color: @selected_fg_color;
 }

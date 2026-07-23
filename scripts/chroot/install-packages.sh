@@ -55,7 +55,8 @@ apt-get install -y --no-install-recommends \
   gdebi \
   packagekit \
   calamares \
-  calamares-settings-debian
+  calamares-settings-debian \
+  xdg-user-dirs
 
 # === OPTIONAL (allow failure) ===
 apt-get install -y --no-install-recommends firmware-misc-nonfree 2>/dev/null || echo "SKIP: firmware-misc-nonfree"
