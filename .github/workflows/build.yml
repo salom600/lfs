@@ -176,106 +176,100 @@ jobs:
 
           # ============================================
           # Create EFI System Partition (ESP) image
-          # This is the reliable way to make UEFI boot work
           # ============================================
           echo "Creating EFI System Partition image..."
-          
-          ESP_SIZE=4  # 4MB is enough for EFI boot files
-          ESP_IMG="build/esp.img"
-          
-          # Create FAT32 image
+
+          ESP_SIZE=8  # 8MB for EFI boot files + GRUB modules
+          ESP_IMG="build/iso/esp.img"  # Must be INSIDE the ISO directory for xorriso -e
+
+          # Create FAT12 image
           dd if=/dev/zero of="$ESP_IMG" bs=1M count=$ESP_SIZE
           mkfs.vfat -F 12 "$ESP_IMG"
-          
+
           # Mount ESP image and populate it
           sudo mkdir -p /mnt/esp
           sudo mount -o loop "$ESP_IMG" /mnt/esp
-          
+
           sudo mkdir -p /mnt/esp/EFI/BOOT
           sudo mkdir -p /mnt/esp/boot/grub
-          
-          # Create GRUB EFI standalone image with embedded config
-          # This ensures GRUB can find its config even without external file
-          GRUB_CFG_TMP=$(mktemp)
-          cat > "$GRUB_CFG_TMP" << 'GRUBCFG'
-          set gfxpayload=keep
-          set default=0
-          set timeout=5
 
-          insmod all_video
-          insmod gfxterm
-          insmod png
-          insmod part_gpt
-          insmod part_msdos
-          insmod ext2
-          insmod search
-          insmod search_fs_uuid
-          insmod normal
-          insmod configfile
+          # Create GRUB EFI standalone image with embedded early config
+          GRUB_CFG_EARLY="build/iso/grub-early.cfg"
+          cat > "$GRUB_CFG_EARLY" << 'EARLYEOF'
+set gfxpayload=keep
+set default=0
+set timeout=5
 
-          # Try to load external config first
-          search --set=root --file /boot/grub/grub.cfg
-          set prefix=($root)/boot/grub
-          
-          # If found, load it; otherwise use embedded entries
-          if [ -f /boot/grub/grub.cfg ]; then
-            configfile /boot/grub/grub.cfg
-          fi
+insmod all_video
+insmod gfxterm
+insmod png
+insmod part_gpt
+insmod part_msdos
+insmod ext2
+insmod search
+insmod search_fs_uuid
+insmod normal
+insmod configfile
 
-          # Fallback menu entries (if external config not found)
-          if background_image /boot/grub/salamos-grub.png ; then
-            set color_normal=white/black
-            set color_highlight=yellow/black
-          else
-            set color_normal=light-gray/black
-            set color_highlight=yellow/black
-          fi
+search --set=root --file /boot/grub/grub.cfg
+set prefix=($root)/boot/grub
 
-          menuentry "SalamOS 2026.1 (Live)" {
-              linux /live/vmlinuz boot=live quiet splash hostname=SalamOS username=salamos
-              initrd /live/initrd
-          }
+if [ -f /boot/grub/grub.cfg ]; then
+  configfile /boot/grub/grub.cfg
+fi
 
-          menuentry "SalamOS 2026.1 (Safe Mode)" {
-              linux /live/vmlinuz boot=live quiet splash hostname=SalamOS username=salamos nomodeset
-              initrd /live/initrd
-          }
+if background_image /boot/grub/salamos-grub.png ; then
+  set color_normal=white/black
+  set color_highlight=yellow/black
+else
+  set color_normal=light-gray/black
+  set color_highlight=yellow/black
+fi
 
-          menuentry "SalamOS 2026.1 (Debug Mode)" {
-              linux /live/vmlinuz boot=live hostname=SalamOS username=salamos
-              initrd /live/initrd
-          }
+menuentry "SalamOS 2026.1 (Live)" {
+    linux /live/vmlinuz boot=live quiet splash hostname=SalamOS username=salamos
+    initrd /live/initrd
+}
 
-          menuentry "System Restart" {
-              reboot
-          }
+menuentry "SalamOS 2026.1 (Safe Mode)" {
+    linux /live/vmlinuz boot=live quiet splash hostname=SalamOS username=salamos nomodeset
+    initrd /live/initrd
+}
 
-          menuentry "System Shutdown" {
-              halt
-          }
-          GRUBCFG
-          
+menuentry "SalamOS 2026.1 (Debug Mode)" {
+    linux /live/vmlinuz boot=live hostname=SalamOS username=salamos
+    initrd /live/initrd
+}
+
+menuentry "System Restart" {
+    reboot
+}
+
+menuentry "System Shutdown" {
+    halt
+}
+EARLYEOF
+
           # Build GRUB standalone EFI image with embedded early config
           sudo grub-mkimage -O x86_64-efi \
             -o /mnt/esp/EFI/BOOT/BOOTX64.EFI \
             -p "/boot/grub" \
-            -c "$GRUB_CFG_TMP" \
+            -c "$GRUB_CFG_EARLY" \
             all_video boot btrfs cat chain configfile echo efifwsetup efi_gop \
             efi_uga fat font gfxmenu gfxterm gzio hfsplus iso9660 linux \
             loadenv loopback ls lsefi normal part_apple part_msdos part_gpt \
             png read reboot search search_fs_uuid search_fs_file search_label \
             squash4 test true video video_fb xfs
-          
-          rm -f "$GRUB_CFG_TMP"
-          
+
           # Also copy grub.cfg and wallpaper to ESP for fallback
           sudo cp scripts/chroot/grub.cfg /mnt/esp/boot/grub/grub.cfg
           sudo cp build/resources/salamos-grub.png /mnt/esp/boot/grub/salamos-grub.png
-          
+
           sudo umount /mnt/esp
           sudo rm -rf /mnt/esp
-          
+
           echo "EFI System Partition image created"
+          ls -lh "$ESP_IMG"
 
           # ============================================
           # Create hybrid ISO: ISOLINUX(BIOS) + ESP(UEFI)
