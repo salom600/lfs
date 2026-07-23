@@ -1,5 +1,5 @@
-# SalamOS GTK2 Theme - 2026 Modern Edition
-# Color palette matching new 2026 design
+# SalamOS GTK2 Theme - 2026 PROFESSIONAL Edition
+# Matching the GTK3 Fluent Design theme colors exactly
 
 gtk-color-scheme = "
     bg_color:#0d1123
@@ -13,6 +13,7 @@ gtk-color-scheme = "
     hover_color:#2d468c
     light_blue:#648cdc
     disabled_color:#3a3a4e
+    card_color:#16213e
 "
 
 style "salamos-default"
@@ -30,6 +31,18 @@ style "salamos-default"
     text[NORMAL]   = "#dce6ff"
     text[SELECTED] = "#ffffff"
     font_name = "Noto Sans 10"
+    GtkButton::default-border = {0,0,0,0}
+    GtkButton::default-outside-border = {0,0,0,0}
+    GtkButton::inner-border = {8,8,4,4}
+    GtkButton::child-displacement-x = 0
+    GtkButton::child-displacement-y = 0
+    GtkRange::slider-width = 16
+    GtkRange::trough-border = 0
+    GtkRange::activate-slider = 1
+    GtkScrollbar::has-backward-stepper = 0
+    GtkScrollbar::has-forward-stepper = 0
+    GtkScrollbar::min-slider-length = 30
+    GtkPaned::handle-size = 3
 }
 
 style "salamos-button" = "salamos-default"
@@ -37,24 +50,41 @@ style "salamos-button" = "salamos-default"
     bg[NORMAL] = "#16213e"
     bg[PRELIGHT] = "#2d468c"
     bg[ACTIVE] = "#7c3aed"
+    fg[NORMAL] = "#dce6ff"
+    fg[PRELIGHT] = "#ffffff"
 }
 
 style "salamos-entry" = "salamos-default"
 {
     bg[NORMAL] = "#16213e"
     base[NORMAL] = "#0f1525"
+    text[NORMAL] = "#dce6ff"
 }
 
 style "salamos-menu" = "salamos-default"
 {
     bg[NORMAL] = "#0d1123"
     bg[PRELIGHT] = "#7c3aed"
+    fg[PRELIGHT] = "#ffffff"
 }
 
 style "salamos-treeview" = "salamos-default"
 {
     bg[NORMAL] = "#16213e"
     bg[SELECTED] = "#7c3aed"
+    fg[SELECTED] = "#ffffff"
+}
+
+style "salamos-toolbar" = "salamos-default"
+{
+    bg[NORMAL] = "#0d1123"
+    bg[PRELIGHT] = "#2d468c"
+}
+
+style "salamos-progress" = "salamos-default"
+{
+    bg[NORMAL] = "#16213e"
+    bg[PRELIGHT] = "#7c3aed"
 }
 
 class "GtkWidget" style "salamos-default"
@@ -62,3 +92,5 @@ class "GtkButton" style "salamos-button"
 class "GtkEntry" style "salamos-entry"
 widget_class "*Menu*" style "salamos-menu"
 class "GtkTreeView" style "salamos-treeview"
+class "GtkToolbar" style "salamos-toolbar"
+class "GtkProgressBar" style "salamos-progress"

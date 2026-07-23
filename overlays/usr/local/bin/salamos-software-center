@@ -1,64 +1,228 @@
 #!/bin/bash
-# SalamOS Software Center - 2026 Modern Edition
-# One-click app installation like Windows
+# SalamOS Software Center - 2026 PROFESSIONAL Edition
+# RULE 3: Easy usability - Gaming + Software + Everything in ONE place
 # ============================================
-export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 
-declare -A APPS=(
-  ["Firefox Browser"]="firefox-esr"
-  ["Chromium Browser"]="chromium"
-  ["Thunderbird Email"]="thunderbird"
-  ["Transmission Torrent"]="transmission-gtk"
-  ["LibreOffice Full"]="libreoffice"
-  ["LibreOffice Writer"]="libreoffice-writer"
-  ["LibreOffice Calc"]="libreoffice-calc"
-  ["VLC Media Player"]="vlc"
-  ["mpv Player (Light)"]="mpv"
-  ["GIMP Image Editor"]="gimp"
-  ["Inkscape Vector"]="inkscape"
-  ["VS Code"]="code"
-  ["Geany IDE"]="geany"
-  ["Telegram"]="telegram-desktop"
-  ["Discord"]="discord"
-  ["BleachBit (Cleaner)"]="bleachbit"
-  ["Timeshift (Backup)"]="timeshift"
-  ["Steam (Games)"]="steam"
-  ["Lutris (Games)"]="lutris"
-  ["Wine (Windows apps)"]="wine"
-)
+MODE="${1:-gui}"
 
-case "${1:-}" in
-  install)
-    echo "Installing $2..."
-    sudo apt-get install -y "$2" ;;
-  remove)
-    echo "Removing $2..."
-    sudo apt-get remove --purge -y "$2"
-    sudo apt-get autoremove -y --purge ;;
-  search)
-    apt-cache search "$2" | head -20 ;;
-  list)
-    echo "=== SalamOS Software Center ==="
-    for app in "${!APPS[@]}"; do
-      printf "%-30s %s\n" "$app" "${APPS[$app]}"
-    done | sort ;;
-  gui)
-    if command -v rofi &>/dev/null; then
-      choice=$(for app in "${!APPS[@]}"; do echo "$app"; done | sort | \
-        rofi -dmenu -p "SalamOS Software Center" -i -config ~/.config/rofi/config.rasi)
-      if [ -n "$choice" ]; then
-        pkg="${APPS[$choice]}"
-        if [ -n "$pkg" ]; then
-          lxterminal -e bash -c "sudo apt-get install -y $pkg; echo 'Done! Press Enter to close.'; read"
-        fi
-      fi
-    else
-      echo "=== SalamOS Software Center ==="
-      for app in "${!APPS[@]}"; do printf "%-30s %s\n" "$app" "${APPS[$app]}"; done | sort
-      read -p "Enter package to install: " pkg
-      sudo apt-get install -y "$pkg"
-    fi ;;
-  *)
-    echo "SalamOS Software Center"
-    echo "Commands: install|remove|search|list|gui <package>" ;;
-esac
+show_gui() {
+    # Modern dialog-based Software Center
+    # Categories: Gaming | Internet | Utilities | System | Development
+    
+    CHOICE=$(dialog --clear --title "SalamOS Software Center 2026.1" \
+    --menu "\nChoose a category to install software:\n\nAll installs are ONE-CLICK - just select and press Enter" \
+    20 70 10 \
+    "1" "🎮 Gaming - Steam, Lutris, Wine, Heroic" \
+    "2" "🌐 Internet - Browsers, Chat, Email" \
+    "3" "🔧 Utilities - File tools, Media, Office" \
+    "4" "⚙️ System - Drivers, Settings, Tools" \
+    "5" "💡 Development - Programming, IDEs" \
+    "6" "🎨 Themes - Wallpapers, Icons, Fonts" \
+    "7" "🧹 Clean System - Remove bloat" \
+    "8" "📦 Update All - System update" \
+    2>&1 >/dev/tty)
+    
+    case "$CHOICE" in
+        1) show_gaming ;;
+        2) show_internet ;;
+        3) show_utilities ;;
+        4) show_system ;;
+        5) show_development ;;
+        6) show_themes ;;
+        7) clean_system ;;
+        8) update_system ;;
+        *) echo "Cancelled" ;;
+    esac
+}
+
+show_gaming() {
+    CHOICE=$(dialog --clear --title "🎮 Gaming Center" \
+    --menu "\nInstall gaming platforms (ONE-CLICK):\n\nAll platforms install with proper drivers automatically" \
+    18 65 10 \
+    "1" "Steam - #1 gaming platform (Proton built-in)" \
+    "2" "Lutris - All stores + emulation manager" \
+    "3" "Heroic - Epic + GOG launcher" \
+    "4" "Bottles - Windows apps manager" \
+    "5" "Wine - Windows compatibility layer" \
+    "6" "Mesa Vulkan - GPU drivers update" \
+    "7" "GameMode - Gaming performance optimizer" \
+    "8" "ALL Gaming - Install everything above" \
+    2>&1 >/dev/tty)
+    
+    case "$CHOICE" in
+        1) sudo apt-get install -y steam-installer && echo "✓ Steam installed!" ;;
+        2) sudo apt-get install -y lutris && echo "✓ Lutris installed!" ;;
+        3) show_msg "Heroic Games Launcher" "Install via: flatpak install flathub com.heroicgameslauncher.hgl" ;;
+        4) show_msg "Bottles" "Install via: flatpak install flathum com.usebottles.bottles" ;;
+        5) sudo apt-get install -y wine wine64 wine32 && echo "✓ Wine installed!" ;;
+        6) sudo apt-get install -y mesa-vulkan-drivers libgl1-mesa-dri vulkan-tools && echo "✓ Vulkan drivers updated!" ;;
+        7) sudo apt-get install -y gamemode libgamemode0 && echo "✓ GameMode installed!" ;;
+        8) sudo apt-get install -y steam-installer lutris wine wine64 wine32 mesa-vulkan-drivers gamemode && echo "✓ ALL Gaming installed!" ;;
+        *) echo "Cancelled" ;;
+    esac
+}
+
+show_internet() {
+    CHOICE=$(dialog --clear --title "🌐 Internet" \
+    --menu "\nInstall internet apps (ONE-CLICK):" \
+    15 55 8 \
+    "1" "Thunderbird - Email client" \
+    "2" "Transmission - Torrent client" \
+    "3" "HexChat - IRC chat" \
+    "4" "FileZilla - FTP client" \
+    2>&1 >/dev/tty)
+    
+    case "$CHOICE" in
+        1) sudo apt-get install -y thunderbird ;;
+        2) sudo apt-get install -y transmission-gtk ;;
+        3) sudo apt-get install -y hexchat ;;
+        4) sudo apt-get install -y filezilla ;;
+        *) echo "Cancelled" ;;
+    esac
+}
+
+show_utilities() {
+    CHOICE=$(dialog --clear --title "🔧 Utilities" \
+    --menu "\nInstall utility apps (ONE-CLICK):" \
+    15 55 8 \
+    "1" "VLC - Media player (all formats)" \
+    "2" "GIMP - Image editor" \
+    "3" "LibreOffice - Office suite" \
+    "4" "Archive Manager - File compression" \
+    "5" "Evince - PDF viewer" \
+    "6" "Mousepad - Text editor" \
+    2>&1 >/dev/tty)
+    
+    case "$CHOICE" in
+        1) sudo apt-get install -y vlc ;;
+        2) sudo apt-get install -y gimp ;;
+        3) sudo apt-get install -y libreoffice-calc libreoffice-writer ;;
+        4) sudo apt-get install -y file-roller p7zip-full ;;
+        5) sudo apt-get install -y evince ;;
+        6) sudo apt-get install -y mousepad ;;
+        *) echo "Cancelled" ;;
+    esac
+}
+
+show_system() {
+    CHOICE=$(dialog --clear --title "⚙️ System" \
+    --menu "\nInstall system tools (ONE-CLICK):" \
+    15 55 8 \
+    "1" "GParted - Partition manager" \
+    "2" "TLP - Power management" \
+    "3" "Pavucontrol - Audio control" \
+    "4" "NVIDIA drivers - GPU driver" \
+    "5" "Flatpak - Modern package format" \
+    2>&1 >/dev/tty)
+    
+    case "$CHOICE" in
+        1) sudo apt-get install -y gparted ;;
+        2) sudo apt-get install -y tlp ;;
+        3) sudo apt-get install -y pavucontrol ;;
+        4) sudo apt-get install -y nvidia-driver ;;
+        5) sudo apt-get install -y flatpak ;;
+        *) echo "Cancelled" ;;
+    esac
+}
+
+show_development() {
+    CHOICE=$(dialog --clear --title "💡 Development" \
+    --menu "\nInstall dev tools (ONE-CLICK):" \
+    15 55 8 \
+    "1" "VS Codium - Code editor" \
+    "2" "Python3 + pip - Programming" \
+    "3" "Git - Version control" \
+    "4" "Node.js - Web development" \
+    2>&1 >/dev/tty)
+    
+    case "$CHOICE" in
+        1) sudo apt-get install -y codium || flatpak install flathub com.vscodium.codium ;;
+        2) sudo apt-get install -y python3 python3-pip ;;
+        3) sudo apt-get install -y git ;;
+        4) sudo apt-get install -y nodejs npm ;;
+        *) echo "Cancelled" ;;
+    esac
+}
+
+show_themes() {
+    CHOICE=$(dialog --clear --title "🎨 Themes & Appearance" \
+    --menu "\nInstall themes and fonts (ONE-CLICK):" \
+    15 55 8 \
+    "1" "Flatpak themes - Modern icon sets" \
+    "2" "Arabic fonts - Noto Arabic" \
+    "3" "CJK fonts - Chinese/Japanese/Korean" \
+    2>&1 >/dev/tty)
+    
+    case "$CHOICE" in
+        1) flatpak install flathub org.gtk.Gtk3theme.Adwaita-dark ;;
+        2) sudo apt-get install -y fonts-noto-core ;;
+        3) sudo apt-get install -y fonts-noto-cjk ;;
+        *) echo "Cancelled" ;;
+    esac
+}
+
+clean_system() {
+    dialog --title "🧹 Clean System" --msgbox "\nRemoving unnecessary packages and cache...\nThis frees up disk space and improves performance" 10 40
+    
+    sudo apt-get autoremove -y --purge
+    sudo apt-get clean
+    sudo rm -rf /var/cache/apt/archives/*
+    
+    dialog --title "✓ Clean Complete" --msgbox "\nSystem cleaned! Unused packages and cache removed." 8 35
+}
+
+update_system() {
+    dialog --title "📦 System Update" --msgbox "\nUpdating all packages to latest versions...\nThis keeps your system secure and fast" 10 40
+    
+    sudo apt-get update
+    sudo apt-get upgrade -y
+    
+    dialog --title "✓ Update Complete" --msgbox "\nAll packages updated to latest versions!" 8 35
+}
+
+show_msg() {
+    TITLE="$1"
+    MSG="$2"
+    dialog --title "$TITLE" --msgbox "\n$MSG\n\nPress Enter to close" 12 50
+}
+
+# CLI mode (for terminal users)
+show_cli() {
+    echo "SalamOS Software Center 2026.1"
+    echo "=============================="
+    echo ""
+    echo "Usage: salamos-software-center [category]"
+    echo ""
+    echo "Categories:"
+    echo "  gaming   - Steam, Lutris, Wine, Heroic, Bottles"
+    echo "  internet - Thunderbird, Transmission, Chat"
+    echo "  utilities - VLC, GIMP, LibreOffice"
+    echo "  system   - GParted, TLP, NVIDIA, Flatpak"
+    echo "  dev      - VS Codium, Python, Git, Node.js"
+    echo "  themes   - Fonts, Icon packs"
+    echo "  clean    - Remove bloat and cache"
+    echo "  update   - Update all packages"
+    echo ""
+    echo "Example: salamos-software-center gaming"
+    echo ""
+    
+    case "$MODE" in
+        gaming) sudo apt-get install -y steam-installer lutris wine ;;
+        internet) sudo apt-get install -y thunderbird transmission-gtk ;;
+        utilities) sudo apt-get install -y vlc gimp ;;
+        system) sudo apt-get install -y gparted flatpak ;;
+        dev) sudo apt-get install -y python3 git ;;
+        themes) sudo apt-get install -y fonts-noto ;;
+        clean) sudo apt-get autoremove -y --purge && sudo apt-get clean ;;
+        update) sudo apt-get update && sudo apt-get upgrade -y ;;
+        gui) show_gui ;;
+        *) show_gui ;;
+    esac
+}
+
+# Main
+if [ "$MODE" = "gui" ]; then
+    show_gui
+else
+    show_cli
+fi

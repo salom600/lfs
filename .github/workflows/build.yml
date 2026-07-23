@@ -39,9 +39,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             debootstrap squashfs-tools xorriso isolinux syslinux-common \
-            grub-pc-bin grub-efi-amd64-bin grub-efi-amd64-signed \
+            grub-pc-bin grub-efi-amd64-bin grub-efi-amd64-signed shim-signed \
             mtools dosfstools e2fsprogs parted gdisk fdisk \
-            python3-pil systemd-container fakeroot rsync lz4
+            python3-pil systemd-container fakeroot rsync lz4 dialog
 
       - name: Generate SalamOS assets
         run: |
