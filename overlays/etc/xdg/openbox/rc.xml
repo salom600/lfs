@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openbox_config xmlns="http://openbox.org/3.4/rc"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+  
+<resistance>
+  <strength>10</strength>
+  <screen_edge_strength>20</screen_edge_strength>
+</resistance>
+
+<focus>
+  <focusNew>yes</focusNew>
+  <followMouse>no</followMouse>
+  <focusLast>yes</focusLast>
+  <underMouse>no</underMouse>
+  <focusDelay>0</focusDelay>
+  <raiseOnFocus>yes</raiseOnFocus>
+</focus>
+
+<placement>
+  <policy>Smart</policy>
+  <center>yes</center>
+  <monitor>Active</monitor>
+</placement>
+
+<theme>
+  <name>SalamOS-Dark</name>
+  <titleLayout>DSLIMC</titleLayout>
+  <titleFont>Noto Sans Bold 10</titleFont>
+  <menuFont>Noto Sans 10</menuFont>
+  <toolFont>Noto Sans 10</toolFont>
+  <osdFont>Noto Sans Bold 10</osdFont>
+  <keepBorder>yes</keepBorder>
+  <animateIconify>yes</animateIconify>
+</theme>
+
+<desktops>
+  <number>2</number>
+  <firstdesk>1</firstdesk>
+  <names>
+    <name>Main</name>
+    <name>Work</name>
+  </names>
+  <popupTime>500</popupTime>
+</desktops>
+
+<resize>
+  <drawContents>yes</drawContents>
+  <popupBefore>0</popupBefore>
+  <popupDuring>0</popupDuring>
+  <popupAfter>0</popupAfter>
+</resize>
+
+<margins>
+  <top>0</top>
+  <bottom>48</bottom>
+  <left>0</left>
+  <right>260</right>
+</margins>
+
+<dock>
+  <position>TopLeft</position>
+  <floating>yes</floating>
+  <floatingDirection>Vertical</floatingDirection>
+  <autoHide>yes</autoHide>
+  <hideDelay>500</hideDelay>
+  <showDelay>300</showDelay>
+  <move>yes</move>
+</dock>
+
+<keyboard>
+  <!-- SalamOS 2026 Modern Keybindings -->
+  <!-- Like Windows 11: Super+A=Start Menu, Super+R=Run/Search -->
+  
+  <!-- Super+A: Start Menu (jgmenu) -->
+  <keybind key="W-A">
+    <action name="Execute"><command>jgmenu</command></action>
+  </keybind>
+  
+  <!-- Super+R: App Launcher (rofi) -->
+  <keybind key="W-R">
+    <action name="Execute"><command>rofi -show drun -modi drun</command></action>
+  </keybind>
+  
+  <!-- Super+T: Terminal -->
+  <keybind key="W-T">
+    <action name="Execute"><command>lxterminal</command></action>
+  </keybind>
+  
+  <!-- Super+F: File Manager -->
+  <keybind key="W-F">
+    <action name="Execute"><command>pcmanfm</command></action>
+  </keybind>
+  
+  <!-- Super+W: Web Browser -->
+  <keybind key="W-W">
+    <action name="Execute"><command>firefox-esr</command></action>
+  </keybind>
+  
+  <!-- Super+E: Power Menu (Shutdown/Restart/Lock) -->
+  <keybind key="W-E">
+    <action name="Execute"><command>rofi -show power -modi power:~/.config/rofi/power.sh</command></action>
+  </keybind>
+  
+  <!-- Super+L: Lock Screen -->
+  <keybind key="W-L">
+    <action name="Execute"><command>light-locker-command -l</command></action>
+  </keybind>
+  
+  <!-- Super+Space: Window switcher (rofi) -->
+  <keybind key="W-space">
+    <action name="Execute"><command>rofi -show window</command></action>
+  </keybind>
+  
+  <!-- Alt+F4: Close window -->
+  <keybind key="A-F4">
+    <action name="Close"/>
+  </keybind>
+  
+  <!-- Super+Left/Right: Snap to half screen (Windows 11 snap) -->
+  <keybind key="W-Left">
+    <action name="Unmaximize"/>
+    <action name="MoveResizeTo"><x>0</x><y>0</y><width>50%</width><height>100%</height></action>
+  </keybind>
+  <keybind key="W-Right">
+    <action name="Unmaximize"/>
+    <action name="MoveResizeTo"><x>-0</x><y>0</y><width>50%</width><height>100%</height></action>
+  </keybind>
+  
+  <!-- Super+Up: Maximize -->
+  <keybind key="W-Up">
+    <action name="Maximize"/>
+  </keybind>
+  
+  <!-- Super+Down: Unmaximize/Minimize -->
+  <keybind key="W-Down">
+    <action name="Unmaximize"/>
+    <action name="Iconify"/>
+  </keybind>
+  
+  <!-- Alt+Tab: Window cycling (like Windows) -->
+  <keybind key="A-Tab">
+    <action name="NextWindow"><allDesktops>no</allDesktops><finalactions><action name="Focus"/><action name="Raise"/></finalactions></action>
+  </keybind>
+  
+  <!-- Super+1/2: Switch desktops -->
+  <keybind key="W-1">
+    <action name="GoToDesktop"><to>1</to></action>
+  </keybind>
+  <keybind key="W-2">
+    <action name="GoToDesktop"><to>2</to></action>
+  </keybind>
+  
+  <!-- Ctrl+Alt+Delete: Power menu -->
+  <keybind key="C-A-Delete">
+    <action name="Execute"><command>rofi -show power -modi power:~/.config/rofi/power.sh</command></action>
+  </keybind>
+  
+  <!-- Print: Screenshot -->
+  <keybind key="Print">
+    <action name="Execute"><command>scrot '%Y-%m-%d-%H%M%S_screenshot.png' -e 'mv $f ~/Pictures/'</command></action>
+  </keybind>
+  
+  <!-- Super+Print: Screenshot with selection -->
+  <keybind key="W-Print">
+    <action name="Execute"><command>scrot -s '%Y-%m-%d-%H%M%S_screenshot.png' -e 'mv $f ~/Pictures/'</command></action>
+  </keybind>
+</keyboard>
+
+<mouse>
+  <doubleClickTime>400</doubleClickTime>
+  <dragThreshold>8</dragThreshold>
+  
+  <context name="Root">
+    <!-- Right-click on desktop = Start Menu -->
+    <mousebind button="Right" action="Press">
+      <action name="Execute"><command>jgmenu</command></action>
+    </mousebind>
+    <!-- Middle-click on desktop = App Launcher -->
+    <mousebind button="Middle" action="Press">
+      <action name="Execute"><command>rofi -show drun</command></action>
+    </mousebind>
+  </context>
+  
+  <context name="Frame">
+    <mousebind button="A-Left" action="Drag">
+      <action name="Move"/>
+    </mousebind>
+    <mousebind button="A-Right" action="Drag">
+      <action name="Resize"/>
+    </mousebind>
+  </context>
+</mouse>
+
+<menu>
+  <!-- Hide default Openbox root menu - use jgmenu instead -->
+  <hideDelay>300</hideDelay>
+  <middle>no</middle>
+  <submenuShowDelay>100</submenuShowDelay>
+  <submenuWarp>yes</submenuWarp>
+  <applicationIcons>yes</applicationIcons>
+</menu>
+
+<applications>
+  <!-- Browser: Don't decorate (like Windows 11 Edge) -->
+  <application name="firefox-esr">
+    <decor>no</decor>
+    <maximized>yes</maximized>
+  </application>
+  
+  <!-- Terminal: Small decorations -->
+  <application name="lxterminal">
+    <decor>yes</decor>
+  </application>
+  
+  <!-- File Manager: Maximize -->
+  <application name="pcmanfm">
+    <decor>yes</decor>
+    <maximized>yes</maximized>
+  </application>
+</applications>
+
+</openbox_config>

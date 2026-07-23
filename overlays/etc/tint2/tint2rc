@@ -1,74 +1,81 @@
-# SalamOS tint2 Panel - 2026 Modern Windows 11-style Taskbar
-# Glassmorphism + Centered Icons + System Tray
+# SalamOS tint2 Panel - 2026 PROFESSIONAL Edition
+# TRUE Windows 11 Fluent Design: Centered Dock + Taskbar + System Tray
+# With REAL glassmorphism (via picom glx dual_kawase blur)
 # ============================================
 
 # ==========================================
-# Backgrounds - Frosted Glass / Glassmorphism
+# Backgrounds - TRUE Acrylic Glass (picom provides blur)
 # ==========================================
 
-# Background 1: Main Panel (frosted glass effect)
-rounded = 12
-border_width = 1
-background_color = #0d1123 85
-border_color = #ffffff 8
-
-# Background 2: Task/Button area (subtle glass)
-rounded = 8
+# Background 1: Main Panel - Transparent base, picom handles blur
+rounded = 0
 border_width = 0
-background_color = #16213e 70
-border_color = #ffffff 5
+background_color = #0d1123 0
+border_color = #0d1123 0
+# IMPORTANT: tint2 background must be near-transparent for picom blur to work
 
-# Background 3: Active/Selected task (violet glow)
-rounded = 8
-border_width = 1
+# Background 2: Panel inner area (semi-transparent, picom blurs it)
+rounded = 0
+border_width = 0
+background_color = #0d1123 60
+border_color = #ffffff 0
+
+# Background 3: Active task indicator (violet underline glow)
+rounded = 4
+border_width = 0
 background_color = #7c3aed 90
 border_color = #7c3aed 100
 
-# Background 4: Hover (soft blue)
-rounded = 8
+# Background 4: Hover effect (subtle blue-violet)
+rounded = 4
 border_width = 0
-background_color = #2d468c 60
-border_color = #ffffff 10
+background_color = #2d468c 50
+border_color = #ffffff 0
 
-# Background 5: Launcher icon area
-rounded = 10
-border_width = 0
-background_color = #16213e 40
-border_color = #ffffff 5
-
-# Background 6: Clock/Systray area
-rounded = 10
-border_width = 0
-background_color = #0f3460 75
-border_color = #ffffff 5
-
-# Background 7: Separator
+# Background 5: Launcher area (transparent, icons float)
 rounded = 0
 border_width = 0
-background_color = #ffffff 6
+background_color = #0d1123 0
+border_color = #ffffff 0
+
+# Background 6: Clock/Systray area (subtle glass)
+rounded = 8
+border_width = 0
+background_color = #16213e 70
+border_color = #ffffff 0
+
+# Background 7: Separator (invisible)
+rounded = 0
+border_width = 0
+background_color = #ffffff 0
+border_color = #ffffff 0
 
 # ==========================================
-# Panel - Bottom center, Windows 11 style
+# Panel - Centered Windows 11-style Taskbar
+# CRITICAL: panel_items MUST include T for taskbar (running apps)!
 # ==========================================
-panel_items = LSCB
+panel_items = LTSBC
 panel_position = bottom center horizontal
-panel_size = 96% 44
-panel_margin = 8 4
-panel_padding = 8 0 8
-panel_background_id = 1
+panel_size = 100% 48
+panel_margin = 0 0
+panel_padding = 12 0 12
+panel_background_id = 2
 panel_shrink = 0
 panel_dock = 0
 panel_layer = top
 strut_policy = follow_size
+autohide_height = 4
+autohide_show_timeout = 0.3
+autohide_hide_timeout = 2.0
 
 # ==========================================
-# Launcher - Pinned apps (like Windows taskbar)
+# Launcher - Pinned apps (Centered dock icons like Windows 11)
 # ==========================================
-launcher_padding = 6 2 6
+launcher_padding = 8 4 8
 launcher_background_id = 5
 launcher_icon_theme = Papirus
-launcher_icon_size = 26
-# Pinned launcher apps - most commonly used
+launcher_icon_size = 28
+# Windows 11-style pinned apps - centered dock
 launcher_item_app = /usr/share/applications/jgmenu-salamos.desktop
 launcher_item_app = /usr/share/applications/firefox-esr.desktop
 launcher_item_app = /usr/share/applications/pcmanfm.desktop
@@ -77,36 +84,43 @@ launcher_item_app = /usr/share/applications/salamos-software-center.desktop
 launcher_tooltip = 1
 
 # ==========================================
-# Taskbar - Running apps (like Windows taskbar buttons)
+# Taskbar - RUNNING APPS (Windows 11 task buttons in center)
+# This was MISSING in previous version (LSCB without T)!
 # ==========================================
-taskbar_padding = 4 2 4
-taskbar_background_id = 2
-taskbar_active_background_id = 3
-taskbar_name = 1
-taskbar_name_padding = 10 2
-taskbar_name_font = Noto Sans 9
-taskbar_name_active_font_color = #ffffff 100
-taskbar_name_font_color = #8c8c9a 100
-taskbar_name_urgent_font_color = #e94560 100
+taskbar_padding = 4 4 4
+taskbar_background_id = 0
+taskbar_active_background_id = 0
+# Icon-only mode like Windows 11 (no text labels)
+task_icon = 10
+task_text = 0
+task_width = 44
+task_centered = 1
+task_tooltip = 1
+# Active task gets violet indicator
+task_active_background_id = 3
+task_urgent_background_id = 3
+task_normal_background_id = 0
+# Hover effect
+task_hover_background_id = 4
 
 # ==========================================
-# System Tray - Right side (WiFi, Volume, Battery, Clock)
+# System Tray - Right side (WiFi, Volume, Battery)
 # ==========================================
-systray_padding = 8 0 8
+systray_padding = 10 0 10
 systray_background_id = 6
 systray_sort = right
-systray_icon_size = 20
-systray_icon_ascent = 8
+systray_icon_size = 22
+systray_icon_ascent = 10
 
 # ==========================================
-# Clock - Modern time display (right side)
+# Clock - Modern Windows 11 time display (right side)
 # ==========================================
 time1_format = %H:%M
-time1_font = Noto Sans Bold 11
+time1_font = Noto Sans Bold 12
 time2_format = %a %d %b
-time2_font = Noto Sans 8
+time2_font = Noto Sans 9
 clock_font_color = #dce6ff 100
-clock_padding = 12 4
+clock_padding = 14 6
 clock_background_id = 6
 clock_lclick_command = /usr/bin/lxterminal -e /usr/bin/calcurse
 clock_rclick_command = none
@@ -114,21 +128,21 @@ clock_rclick_command = none
 # ==========================================
 # Battery (if available)
 # ==========================================
-battery_padding = 8 0 8
+battery_padding = 10 0 10
 battery_background_id = 6
 battery_center = true
 battery_font = Noto Sans 9
 battery_font_color = #dce6ff 100
 
 # ==========================================
-# Separator (between launcher and taskbar)
+# Separator (between sections)
 # ==========================================
-separator_padding = 4 0 4
+separator_padding = 8 0 8
 separator_background_id = 7
-separator_color = #ffffff 10
+separator_color = #ffffff 8
 
 # ==========================================
-# Mouse actions
+# Mouse actions - Windows 11-like
 # ==========================================
 mouse_middle = none
 mouse_right = close
@@ -136,11 +150,11 @@ mouse_scroll_up = toggle
 mouse_scroll_down = iconify
 
 # ==========================================
-# Tooltips - Modern frosted glass style
+# Tooltips - Modern frosted glass
 # ==========================================
-tooltip_padding = 8 8
+tooltip_padding = 10 10
 tooltip_background_id = 2
 tooltip_font_color = #dce6ff 100
 tooltip_font = Noto Sans 9
-tooltip_show_timeout = 0.2
-tooltip_hide_timeout = 0.2
+tooltip_show_timeout = 0.15
+tooltip_hide_timeout = 0.15

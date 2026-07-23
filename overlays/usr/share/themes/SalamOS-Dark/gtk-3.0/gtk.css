@@ -1,31 +1,44 @@
-/* SalamOS-Dark GTK3 Theme - 2026 Modern Professional Edition */
-/* Glassmorphism + Fluent Design + Vibrant Violet/Magenta accents */
-/* Color palette inspired by Nexora OS reference */
+/* SalamOS-Dark GTK3 Theme - 2026 PROFESSIONAL Edition */
+/* Fluent Design System: Acrylic transparency + Depth + Animations */
+/* Inspired by Windows 11 Fluent Design 2.0 */
+/* ============================================ */
 
 @define-color bg_color #0d1123;
+@define-color bg_color_alpha rgba(13, 17, 35, 0.85);
 @define-color fg_color #dce6ff;
 @define-color base_color #16213e;
+@define-color base_color_alpha rgba(22, 33, 62, 0.90);
 @define-color text_color #dce6ff;
 @define-color selected_bg_color #7c3aed;
+@define-color selected_bg_color_alpha rgba(124, 58, 237, 0.85);
 @define-color selected_fg_color #ffffff;
 @define-color accent_color #e94560;
 @define-color accent_secondary #648cdc;
 @define-color headerbar_color #0d1123;
 @define-color menu_color #0d1123;
+@define-color menu_color_alpha rgba(13, 17, 35, 0.92);
 @define-color tooltip_color #16213e;
-@define-color border_color #2d468c;
+@define-color tooltip_color_alpha rgba(22, 33, 62, 0.95);
+@define-color border_color rgba(255, 255, 255, 0.08);
+@define-color border_color_violet rgba(124, 58, 237, 0.25);
 @define-color card_color #16213e;
+@define-color card_color_alpha rgba(22, 33, 62, 0.80);
 @define-color hover_color #2d468c;
+@define-color hover_color_alpha rgba(45, 70, 140, 0.70);
 @define-color disabled_color #3a3a4e;
 @define-color violet #7c3aed;
+@define-color violet_alpha rgba(124, 58, 237, 0.20);
 @define-color deep_blue #0f3460;
 @define-color royal_blue #2d468c;
 @define-color light_blue #648cdc;
 @define-color soft_pink #c8508c;
 @define-color coral #e94560;
+@define-color shadow_color rgba(0, 0, 0, 0.5);
+@define-color shadow_color_heavy rgba(0, 0, 0, 0.7);
+@define-color glow_violet rgba(124, 58, 237, 0.15);
 
 /* ============================================
-   Global Reset - Clean Flat Design
+   GLOBAL - Fluent Design Foundation
    ============================================ */
 * {
     background-color: @bg_color;
@@ -36,6 +49,7 @@
     outline-color: @violet;
     outline-style: solid;
     outline-width: 0;
+    -gtk-secondary-caret-color: @violet;
 }
 
 *:hover {
@@ -43,28 +57,48 @@
 }
 
 /* ============================================
-   Window Frame - Modern rounded
+   ANIMATIONS - Smooth 200ms transitions (Fluent)
    ============================================ */
-window {
-    background-color: @bg_color;
-    border-radius: 10px;
-}
-
-window decoration {
-    border-radius: 10px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+button,
+entry,
+notebook tab,
+menuitem,
+treeview row,
+list row,
+scale slider,
+switch,
+progressbar,
+stacksidebar row,
+checkbutton check,
+radiobutton radio {
+    transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* ============================================
-   Header Bar - Modern slim, violet accent line
+   WINDOW - Modern rounded with depth shadow
+   ============================================ */
+window {
+    background-color: @bg_color;
+    border-radius: 12px;
+}
+
+window decoration {
+    border-radius: 12px;
+    box-shadow: 0 12px 48px @shadow_color_heavy, 0 0 0 1px @border_color_violet;
+}
+
+/* ============================================
+   HEADER BAR - Modern Fluent slim bar
+   Violet accent underline, compact layout
    ============================================ */
 headerbar {
     background-color: @headerbar_color;
     color: @fg_color;
     border-bottom: 2px solid @violet;
-    padding: 6px 14px;
-    min-height: 38px;
-    border-radius: 10px 10px 0 0;
+    padding: 4px 16px;
+    min-height: 42px;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 2px 12px @shadow_color;
 }
 
 headerbar .title {
@@ -73,85 +107,104 @@ headerbar .title {
     font-size: 11pt;
 }
 
+headerbar .subtitle {
+    color: @disabled_color;
+    font-size: 9pt;
+}
+
 headerbar button {
     background-color: transparent;
     border: none;
-    border-radius: 6px;
-    padding: 4px 10px;
-    min-height: 26px;
-    transition: background-color 150ms ease;
+    border-radius: 8px;
+    padding: 4px 12px;
+    min-height: 28px;
+    color: @fg_color;
+    transition: all 150ms ease;
 }
 
 headerbar button:hover {
-    background-color: @hover_color;
+    background-color: @hover_color_alpha;
+    color: @selected_fg_color;
+    box-shadow: 0 0 16px @violet_alpha;
 }
 
 headerbar button:active {
-    background-color: @violet;
+    background-color: @selected_bg_color;
     color: @selected_fg_color;
 }
 
 /* ============================================
-   Buttons - Modern pill-shaped with violet accent
+   BUTTONS - Modern Fluent Design pills
+   Depth shadows + Violet glow on hover
    ============================================ */
 button {
     background-color: @card_color;
     color: @fg_color;
-    border: none;
+    border: 1px solid @border_color;
     border-radius: 8px;
-    padding: 8px 20px;
-    min-height: 30px;
-    transition: all 150ms ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    padding: 8px 22px;
+    min-height: 32px;
+    transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 2px 8px @shadow_color, 0 0 0 1px transparent;
 }
 
 button:hover {
     background-color: @hover_color;
     color: @selected_fg_color;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+    border-color: @violet;
+    box-shadow: 0 4px 16px @shadow_color, 0 0 24px @violet_alpha;
 }
 
 button:active, button:checked {
     background-color: @violet;
     color: @selected_fg_color;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    border-color: @violet;
+    box-shadow: 0 2px 4px @shadow_color, inset 0 1px 2px rgba(255,255,255,0.1);
 }
 
 button.suggested-action {
     background-color: @accent_color;
     color: @selected_fg_color;
     border-radius: 8px;
+    border-color: @accent_color;
 }
 
 button.suggested-action:hover {
     background-color: @soft_pink;
+    box-shadow: 0 4px 16px rgba(233, 69, 96, 0.3);
 }
 
 button.destructive-action {
     background-color: @coral;
     color: @selected_fg_color;
+    border-color: @coral;
+}
+
+button.destructive-action:hover {
+    box-shadow: 0 4px 16px rgba(233, 69, 96, 0.3);
 }
 
 /* ============================================
-   Entry / Input fields - Modern rounded with violet focus
+   ENTRY / INPUT - Modern rounded with violet focus glow
    ============================================ */
 entry, spinbutton {
     background-color: @card_color;
     color: @text_color;
     border: 2px solid @border_color;
     border-radius: 8px;
-    padding: 8px 12px;
-    min-height: 30px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 10px 14px;
+    min-height: 32px;
+    box-shadow: inset 0 2px 4px @shadow_color;
+    transition: all 200ms ease;
 }
 
 entry:focus, spinbutton:focus {
     border-color: @violet;
-    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.3);
+    box-shadow: 0 0 0 3px @violet_alpha, inset 0 2px 4px @shadow_color;
 }
 
 /* ============================================
-   Notebook / Tabs - Modern pill tabs with violet
+   NOTEBOOK / TABS - Modern Fluent pill tabs
    ============================================ */
 notebook {
     background-color: @bg_color;
@@ -160,33 +213,36 @@ notebook {
 
 notebook header {
     background-color: @bg_color;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid @border_color;
 }
 
 notebook tab {
     background-color: transparent;
     color: @disabled_color;
-    padding: 8px 18px;
+    padding: 8px 20px;
     border-radius: 8px 8px 0 0;
+    transition: all 200ms ease;
 }
 
 notebook tab:checked {
     background-color: @card_color;
     color: @selected_fg_color;
-    border-bottom: 2px solid @violet;
+    border-bottom: 3px solid @violet;
+    box-shadow: 0 2px 8px @violet_alpha;
 }
 
 notebook tab:hover {
     color: @fg_color;
+    background-color: @hover_color_alpha;
 }
 
 /* ============================================
-   Treeview / Lists - Modern card style
+   TREEVIEW / LISTS - Modern card rows
    ============================================ */
 treeview {
     background-color: @card_color;
     color: @text_color;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 treeview:selected {
@@ -198,10 +254,11 @@ treeview header {
     background-color: @bg_color;
     color: @fg_color;
     font-weight: bold;
+    border-bottom: 1px solid @border_color;
 }
 
 /* ============================================
-   Scrollbar - Slim modern, violet on hover
+   SCROLLBAR - Ultra-slim modern, violet on hover
    ============================================ */
 scrollbar {
     background-color: transparent;
@@ -209,92 +266,97 @@ scrollbar {
 }
 
 scrollbar slider {
-    background-color: rgba(255, 255, 255, 0.12);
-    border-radius: 6px;
-    min-width: 5px;
-    min-height: 5px;
+    background-color: rgba(255, 255, 255, 0.10);
+    border-radius: 8px;
+    min-width: 4px;
+    min-height: 4px;
+    transition: all 150ms ease;
 }
 
 scrollbar slider:hover {
     background-color: @violet;
+    min-width: 6px;
 }
 
 /* ============================================
-   Menu - Modern frosted glass popup
+   MENU - Acrylic frosted glass popup
+   With violet accent border + depth shadow
    ============================================ */
 menu, .menu {
-    background-color: @menu_color;
+    background-color: @menu_color_alpha;
     color: @fg_color;
-    border: 1px solid rgba(124, 58, 237, 0.2);
-    border-radius: 10px;
-    padding: 8px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    border: 1px solid @border_color_violet;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 12px 48px @shadow_color_heavy, 0 0 0 1px @border_color_violet;
 }
 
 menuitem, .menuitem {
     background-color: transparent;
     color: @fg_color;
-    padding: 8px 14px;
-    border-radius: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
     margin: 2px 0;
-    transition: background-color 100ms ease;
+    transition: all 150ms ease;
 }
 
 menuitem:hover, .menuitem:hover {
     background-color: @violet;
     color: @selected_fg_color;
+    box-shadow: 0 0 16px @violet_alpha;
 }
 
 /* ============================================
-   Tooltip - Frosted glass
+   TOOLTIP - Acrylic glass with violet glow
    ============================================ */
 tooltip {
-    background-color: @card_color;
+    background-color: @tooltip_color_alpha;
     color: @fg_color;
-    border: 1px solid rgba(124, 58, 237, 0.3);
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    border: 1px solid @border_color_violet;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 8px 24px @shadow_color, 0 0 16px @violet_alpha;
 }
 
 /* ============================================
-   Dialog - Modern card, rounded corners
+   DIALOG - Modern card with rounded corners + depth
    ============================================ */
 dialog, .dialog {
     background-color: @bg_color;
     border: none;
     border-radius: 14px;
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 16px 64px @shadow_color_heavy, 0 0 0 1px @border_color_violet;
 }
 
 /* ============================================
-   Scale / Slider - Modern violet accent
+   SCALE / SLIDER - Violet accent with glow
    ============================================ */
 scale slider {
     background-color: @violet;
     border: none;
     border-radius: 50%;
-    min-width: 16px;
-    min-height: 16px;
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+    min-width: 18px;
+    min-height: 18px;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.5), 0 0 16px @violet_alpha;
 }
 
 scale trough {
     background-color: @card_color;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 /* ============================================
-   Check / Radio - Modern violet
+   CHECK / RADIO - Modern Fluent violet
    ============================================ */
 checkbutton check, radiobutton radio {
     background-color: @card_color;
     border: 2px solid @border_color;
     color: @fg_color;
     border-radius: 4px;
-    min-width: 18px;
-    min-height: 18px;
+    min-width: 20px;
+    min-height: 20px;
+    transition: all 200ms ease;
 }
 
 radiobutton radio {
@@ -305,68 +367,74 @@ checkbutton check:checked, radiobutton radio:checked {
     background-color: @violet;
     border-color: @violet;
     color: @selected_fg_color;
+    box-shadow: 0 0 12px @violet_alpha;
 }
 
 /* ============================================
-   Switch - Modern toggle with violet on
+   SWITCH - Modern Fluent toggle with violet ON
    ============================================ */
 switch {
     background-color: @card_color;
     border: none;
-    border-radius: 14px;
-    min-width: 42px;
-    min-height: 22px;
+    border-radius: 16px;
+    min-width: 46px;
+    min-height: 24px;
+    transition: all 200ms ease;
 }
 
 switch:checked {
     background-color: @violet;
+    box-shadow: 0 0 16px @violet_alpha;
 }
 
 switch slider {
     background-color: @fg_color;
     border: none;
-    border-radius: 12px;
-    min-width: 18px;
-    min-height: 18px;
+    border-radius: 14px;
+    min-width: 20px;
+    min-height: 20px;
+    box-shadow: 0 2px 6px @shadow_color;
 }
 
 /* ============================================
-   Progress Bar - Violet gradient
+   PROGRESS BAR - Violet gradient with glow
    ============================================ */
 progressbar {
     background-color: @card_color;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 progressbar progress {
     background-color: @violet;
-    border-radius: 6px;
+    border-radius: 8px;
+    box-shadow: 0 0 12px @violet_alpha;
 }
 
 /* ============================================
-   Status Bar
+   STATUS BAR
    ============================================ */
 statusbar {
     background-color: @bg_color;
     color: @disabled_color;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid @border_color;
 }
 
 /* ============================================
-   Calendar - Modern with violet highlights
+   CALENDAR - Modern Fluent with violet highlights
    ============================================ */
 calendar {
     background-color: @card_color;
     color: @text_color;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
 }
 
 calendar:selected {
     background-color: @violet;
     color: @selected_fg_color;
-    border-radius: 6px;
+    border-radius: 8px;
+    box-shadow: 0 0 12px @violet_alpha;
 }
 
 calendar.header {
@@ -376,16 +444,16 @@ calendar.header {
 }
 
 /* ============================================
-   Separator
+   SEPARATOR - Minimal, subtle
    ============================================ */
 separator {
-    background-color: rgba(255, 255, 255, 0.06);
+    background-color: @border_color;
     min-height: 1px;
     min-width: 1px;
 }
 
 /* ============================================
-   Link - Coral accent color
+   LINK - Coral accent
    ============================================ */
 link {
     color: @accent_color;
@@ -396,7 +464,7 @@ link:hover {
 }
 
 /* ============================================
-   Desktop icons style - Modern white text with shadow
+   DESKTOP ICONS - White text with shadow
    ============================================ */
 desktop-icon-item {
     color: #ffffff;
@@ -405,43 +473,104 @@ desktop-icon-item {
 }
 
 /* ============================================
-   File manager specific
+   FILE MANAGER specific
    ============================================ */
 NautilusWindow, CajaWindow {
     background-color: @bg_color;
 }
 
 /* ============================================
-   List box rows
+   LIST BOX ROWS - Modern card style with hover glow
    ============================================ */
 list row {
     background-color: transparent;
-    padding: 8px 14px;
-    border-radius: 6px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: all 200ms ease;
 }
 
 list row:hover {
-    background-color: @hover_color;
+    background-color: @hover_color_alpha;
 }
 
 list row:selected {
     background-color: @violet;
     color: @selected_fg_color;
+    box-shadow: 0 0 16px @violet_alpha;
 }
 
 /* ============================================
-   Stack sidebar - Modern with violet accent
+   STACK SIDEBAR - Fluent Design with violet
    ============================================ */
 stacksidebar sidebar {
     background-color: @bg_color;
 }
 
 stacksidebar row {
-    padding: 10px 14px;
-    border-radius: 6px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: all 200ms ease;
 }
 
 stacksidebar row:selected {
     background-color: @violet;
     color: @selected_fg_color;
+    box-shadow: 0 0 16px @violet_alpha;
+}
+
+/* ============================================
+   POPOVER - Acrylic glass dropdown
+   ============================================ */
+popover {
+    background-color: @menu_color_alpha;
+    border: 1px solid @border_color_violet;
+    border-radius: 12px;
+    box-shadow: 0 12px 48px @shadow_color_heavy;
+}
+
+popover button {
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+}
+
+popover button:hover {
+    background-color: @hover_color_alpha;
+}
+
+/* ============================================
+   ACTION BAR
+   ============================================ */
+actionbar {
+    background-color: @bg_color;
+    border-top: 1px solid @border_color;
+    padding: 6px;
+}
+
+/* ============================================
+   INFobar / STATUS icons
+   ============================================ */
+infobar {
+    background-color: @deep_blue;
+    color: @fg_color;
+    border-radius: 8px;
+}
+
+infobar.error {
+    background-color: @coral;
+}
+
+infobar.warning {
+    background-color: #f0a500;
+}
+
+/* ============================================
+   EXPANDER - Violet arrow
+   ============================================ */
+expander {
+    color: @violet;
+}
+
+expander:hover {
+    color: @fg_color;
 }
