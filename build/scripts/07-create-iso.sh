@@ -236,6 +236,11 @@ if command -v grub-mkimage &>/dev/null; then
     sudo cp "$ISO_DIR/boot/grub/grub.cfg" /mnt/esp/boot/grub/grub.cfg
     sudo cp "$ISO_DIR/boot/grub/salamos-grub.png" /mnt/esp/boot/grub/salamos-grub.png
 
+    # Also make EFI boot files visible in ISO filesystem tree
+    # (xorriso warns about missing /EFI/BOOT; improves UEFI USB stick compatibility)
+    mkdir -p "$ISO_DIR/EFI/BOOT"
+    cp /mnt/esp/EFI/BOOT/BOOTX64.EFI "$ISO_DIR/EFI/BOOT/"
+
     echo "[07-create-iso] GRUB EFI image created successfully"
 fi
 
@@ -267,7 +272,7 @@ xorriso -as mkisofs \
     -e esp.img \
     -no-emul-boot \
     -isohybrid-gpt-basdat \
-    -append_partition 2 0xef esp.img \
+    -append_partition 2 0xef "$ESP_IMG" \
     -partition_offset 16 \
     -output "$OUTPUT_DIR/$ISO_NAME" \
     "$ISO_DIR"

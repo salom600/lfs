@@ -211,6 +211,11 @@ jobs:
           sudo cp scripts/chroot/grub.cfg /mnt/esp/boot/grub/grub.cfg
           sudo cp build/resources/salamos-grub.png /mnt/esp/boot/grub/salamos-grub.png
 
+          # Also make EFI boot files visible in ISO filesystem tree
+          # (xorriso warns about missing /EFI/BOOT directory; improves UEFI USB stick compat)
+          sudo mkdir -p build/iso/EFI/BOOT
+          sudo cp /mnt/esp/EFI/BOOT/BOOTX64.EFI build/iso/EFI/BOOT/
+
           sudo umount /mnt/esp
           sudo rm -rf /mnt/esp
 
@@ -238,7 +243,7 @@ jobs:
             -e esp.img \
             -no-emul-boot \
             -isohybrid-gpt-basdat \
-            -append_partition 2 0xef esp.img \
+            -append_partition 2 0xef build/iso/esp.img \
             -partition_offset 16 \
             -output "SalamOS-2026.1-amd64.iso" \
             build/iso
